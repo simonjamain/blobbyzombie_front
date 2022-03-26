@@ -1,0 +1,106 @@
+name: GJLOP_CICD
+on:
+    push:
+        branches: [ master ]
+jobs:
+    set_variables:
+        runs-on: ubuntu-latest
+        outputs:
+            build_name: ${{ steps.setbuildname.outputs.build_name }}
+        steps:
+            -   uses: actions/checkout@v2
+            -   name: Create Env Variables
+                run: |
+                    echo "SHORT_SHA=`git rev-parse --short=6 HEAD`" >> $GITHUB_ENV
+                    echo "DATETIME=`echo $(date +%Y%m%d%H%M)`" >> $GITHUB_ENV
+
+            -   id: setbuildname
+                run: echo "::set-output name=build_name::front_${DATETIME}_${SHORT_SHA}"
+
+    install_dependencies:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Cache node modules global and local
+              uses: actions/cache@v2
+              with:
+                  path: |
+                      ~/.npm
+                      ./node_modules
+                  key: gjlop_dependencies
+
+            -   uses: actions/setup-node@v2
+                with:
+                    node-version: '16'
+            - run: npm i -g npm@latest
+            - run: npm i
+
+    build:
+        needs: [install_dependencies, set_variables]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: load cache
+              uses: actions/cache@v2
+              with:
+                  path: |
+                      ~/.npm
+                      ./node_modules
+                  key: gjlop_dependencies
+
+            - uses: actions/setup-node@v2
+              with:
+                node-version: '16'
+            - run: npm run build
+
+            -   name: 'Tar build'
+                run: tar -czvf ${{ needs.set_variables.outputs.build_name }}.tar.gz ./dist/
+
+            -   uses: actions/upload-artifact@v3
+                with:
+                    name: gjlop_build
+                    path: ${{ needs.set_variables.outputs.build_name }}.tar.gz
+                    if-no-files-found: error
+                    retention-days: 1
+
+    deploy:
+        needs: [build, set_variables]
+        if: ${{ github.ref == 'refs/heads/master' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Download build
+              uses: actions/download-artifact@v3
+              with:
+                  name: gjlop_build
+
+            - run: tar -xzvf ${{ needs.set_variables.outputs.build_name }}.tar.gz
+
+            - name: Upload files
+              uses: SamKirkland/FTP-Deploy-Action@4.3.0
+              with:
+                server: ${{ secrets.FTP_SERVER }}
+                username: ${{ secrets.FTP_LOGIN }}
+                password: ${{ secrets.FTP_PWD }}
+                protocol: ftps
+                port: 21
+                local-dir: ./dist/
+                server-dir: ./
+                log-level: minimal
+#                dangerous-clean-slate: true
+
+    save_on_artifactory:
+        needs: [build, set_variables]
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Download build
+                uses: actions/download-artifact@v3
+                with:
+                    name: gjlop_build
+
+            -   uses: jfrog/setup-jfrog-cli@v2
+                env:
+                    JF_ENV_1: ${{ secrets.JFROG_TOKEN }}
+
+            -   run: jf rt u ${{ needs.set_variables.outputs.build_name }}.tar.gz ${{ secrets.JFROG_REPO }}
