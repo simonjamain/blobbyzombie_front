@@ -27,15 +27,19 @@ export class Player implements Drawable{
     }
 
     public getId = () => this.id;
-    public getPosition = () => this.position;
+    public getPosition = () => Vector2.fromVector(this.position);
     public getAimingAngleRad= () => this.aimingAngleRad;
 
-    public shoot():Shot {
-        return new Shot(this.position, this.aimingAngleRad, this.getColor());
+    public shoot(potentialPlayerVictims: Array<Player>):Shot {
+        return new Shot(this.position, this.aimingAngleRad, this.getColor(), potentialPlayerVictims);
     }
 
     public getColor():Vector3 {
         return this.color;
+    }
+
+    public getRadius():number {
+        return Player.radius;
     }
 
     public draw(context: CanvasRenderingContext2D):void{
