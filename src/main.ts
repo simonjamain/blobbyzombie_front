@@ -1,5 +1,5 @@
-import { Vector3 } from './vector3';
-import { Vector2 } from './vector2';
+import {Vector3} from './vector3';
+import {Vector2} from './vector2';
 import {VolatileDrawableArray} from './volatileDrawableArray';
 import {Player} from "./player";
 import {GameControls} from "./gameControls";
@@ -24,7 +24,10 @@ const onStatusReceived = (status: StatusDto) => {
   gameStatus = GameStatus.fromDto(status);
 }
 
-const multiplayerServer = new MultiplayerServer("http://localhost:3000", onWhoisReceived, onStatusReceived);
+let url: string = "https://api.glop.legeay.dev";
+// url = "http://localhost:3000";
+
+const multiplayerServer = new MultiplayerServer(url, onWhoisReceived, onStatusReceived);
 
 let currentPlayer: Player|null = null;
 let manequinPlayer: Player|null = null;
