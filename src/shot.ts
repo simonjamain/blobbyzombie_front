@@ -46,8 +46,8 @@ export class Shot implements Drawable, Volatile{
         if(nearestVictim !== null) {
             this.effectiveRange = nearestVictimDistance;
             this.effectiveEndCoords = new Vector2(
-                this.startCoords.x + Math.cos(this.aimingAngle) * nearestVictimDistance,
-                this.startCoords.y + Math.sin(this.aimingAngle) * nearestVictimDistance
+                this.startCoords.x + Math.cos(this.aimingAngle) * this.effectiveRange,
+                this.startCoords.y + Math.sin(this.aimingAngle) * this.effectiveRange
             );
         }else{
             this.effectiveRange = Shot.range;
