@@ -1,4 +1,4 @@
-name: GJLOP_CICD
+name: GJLOP_CICD_FRONT
 on:
     push:
         branches: [ master ]
