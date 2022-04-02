@@ -14,6 +14,7 @@ declare global {
 new MultiplayerServer("http://localhost:3000", onWhoisReceived, onStatusReceived);
 
 let currentPlayer: Player|null = null;
+let manequinPlayer: Player|null = null;
 
 let lastFrameTimestamp :number = 0;
 
@@ -30,12 +31,12 @@ let scale = 30;
 const gameControls = new GameControls(shoot);
 
 function shoot() {
-  if(currentPlayer === null) return;
-  gameObjects.push(currentPlayer.shoot());
+  if(currentPlayer === null || manequinPlayer === null) return;
+  gameObjects.push(currentPlayer.shoot([manequinPlayer]));
 }
 
 function update(timestamp: DOMHighResTimeStamp) {
-  if(currentPlayer === null) return;
+  if(currentPlayer === null || manequinPlayer === null) return;
 
   const deltaTimeSeconds = (timestamp - lastFrameTimestamp) / 1000;
 
@@ -48,14 +49,13 @@ function update(timestamp: DOMHighResTimeStamp) {
     gameControls.getAimRotation()
     )
   currentPlayer.draw(gameContext);
+  manequinPlayer.draw(gameContext);
   gameObjects.draw(gameContext);
 
   window.requestAnimationFrame(update);
   lastFrameTimestamp = timestamp;
   gameContext.setTransform(1, 0, 0, 1, 0, 0);
 }
-
-
 
 // resize the canvas to fill browser window dynamically
 window.addEventListener('resize', resizeCanvas, false);
@@ -66,8 +66,9 @@ function resizeCanvas() {
 }
 
 function onWhoisReceived (playerDto: PlayerDto) {
-
+  console.log("yolo", playerDto);
   currentPlayer = new Player(Vector2.fromDto(playerDto.position), playerDto.aimingAngleRad, Vector3.fromDto(playerDto.color));
+  manequinPlayer = new Player(new Vector2(10, 10), 0, new Vector3(255, 0, 0));
   window.requestAnimationFrame(update);
 }
 function onStatusReceived (statusDto: StatusDto) {

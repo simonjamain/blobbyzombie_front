@@ -14,12 +14,20 @@ export class Player implements Drawable{
     constructor(private position: Vector2, private aimingAngleRad: number, private color: Vector3) {
     }
 
-    public shoot():Shot {
-        return new Shot(this.position, this.aimingAngleRad, this.getColor());
+    public shoot(potentialPlayerVictims: Array<Player>):Shot {
+        return new Shot(this.position, this.aimingAngleRad, this.getColor(), potentialPlayerVictims);
     }
 
     public getColor():Vector3 {
         return this.color;
+    }
+
+    public getPosition():Vector2 {
+        return Vector2.fromVector(this.position);
+    }
+
+    public getRadius():number {
+        return Player.radius;
     }
 
     public draw(context: CanvasRenderingContext2D):void{
