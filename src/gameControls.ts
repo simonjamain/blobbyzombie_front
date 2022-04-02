@@ -1,41 +1,55 @@
 import { Vector2 } from './vector2';
 export class GameControls {
 
-  public left: number;
-  public right: number;
-  public up: number;
-  public down: number;
+  public moveLeft: number;
+  public moveRight: number;
+  public moveUp: number;
+  public moveDown: number;
+  public rotateTurretClockwise: number;
+  public rotateTurretCounterClockwise: number;
 
   constructor() {
-    this.left = 0;
-    this.right = 0;
-    this.up = 0;
-    this.down = 0;
+    this.moveLeft = 0;
+    this.moveRight = 0;
+    this.moveUp = 0;
+    this.moveDown = 0;
+    this.rotateTurretClockwise = 0;
+    this.rotateTurretCounterClockwise = 0;
 
     this.initListeners();
   }
 
   public getMovementVector():Vector2 {
-    const x = this.right - this.left;
-    const y = this.down - this.up;
+    const x = this.moveRight - this.moveLeft;
+    const y = this.moveDown - this.moveUp;
 
     return new Vector2(x, y);
   }
+
+  public getAimRotation():number {
+    return this.rotateTurretClockwise - this.rotateTurretCounterClockwise;
+  } 
 
   private initListeners(): void {
     window.addEventListener("keydown", (e: KeyboardEvent) => {
       switch (e.key) {
         case "ArrowLeft": // left arrow
-          this.left = 1;
+          this.moveLeft = 1;
           break;
         case "ArrowUp": // up arrow
-          this.up = 1;
+          this.moveUp = 1;
           break;
         case "ArrowRight": // right arrow
-          this.right = 1;
+          this.moveRight = 1;
           break;
         case "ArrowDown": // down arrow
-          this.down = 1;
+          this.moveDown = 1;
+          break;
+        case "d": // right arrow
+          this.rotateTurretClockwise = 1;
+          break;
+        case "q": // down arrow
+          this.rotateTurretCounterClockwise = 1;
           break;
       }
     }, false);
@@ -43,16 +57,22 @@ export class GameControls {
     window.addEventListener("keyup", (e: KeyboardEvent) => {
       switch (e.key) {
         case "ArrowLeft": // left arrow
-          this.left = 0;
+          this.moveLeft = 0;
           break;
         case "ArrowUp": // up arrow
-          this.up = 0;
+          this.moveUp = 0;
           break;
         case "ArrowRight": // right arrow
-          this.right = 0;
+          this.moveRight = 0;
           break;
         case "ArrowDown": // down arrow
-          this.down = 0;
+          this.moveDown = 0;
+          break;
+        case "d": // right arrow
+          this.rotateTurretClockwise = 0;
+          break;
+        case "q": // down arrow
+          this.rotateTurretCounterClockwise = 0;
           break;
       }
     }, false);

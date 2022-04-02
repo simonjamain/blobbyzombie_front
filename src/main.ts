@@ -7,7 +7,7 @@ declare global {
 }
 
 let lastFrameTimestamp :number = 0;
-let currentPlayer = new Player(new Vector2(0,0), new Vector2(1,1))
+let currentPlayer = new Player(new Vector2(0,0), 0)
 
 let gameCanvas = document.getElementById("blobbyzombie") as HTMLCanvasElement;
 window.gameCanvas = gameCanvas;
@@ -25,7 +25,11 @@ function update(timestamp: DOMHighResTimeStamp) {
   gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
   gameContext.scale(scale, scale);
 
-  currentPlayer.update(deltaTimeSeconds, gameControls.getMovementVector())
+  currentPlayer.update(
+    deltaTimeSeconds,
+    gameControls.getMovementVector(), 
+    gameControls.getAimRotation()
+    )
   currentPlayer.draw(gameContext);
 
   window.requestAnimationFrame(update);
