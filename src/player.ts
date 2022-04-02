@@ -13,16 +13,17 @@ export class Player implements Drawable{
     private static turretRotationSpeed:number = 2;// rad/seconds
 
     constructor(private id: String,
-                private name: string,
-                private score: number,
-                private isZombie: boolean,
+                // private name: string,
+                // private score: number,
+                // private isZombie: boolean,
                 private position: Vector2,
                 private aimingAngleRad: number,
                 private color: Vector3) {
+
     }
 
-    public static fromDto({id, name, color, position, score, isZombie, aimingAngleRad}: PlayerDto) {
-        return new Player(id, name, score, isZombie, Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color));
+    public static fromDto({id, /*name,*/ color, position,/* score, isZombie,*/ aimingAngleRad}: PlayerDto) {
+        return new Player(id, /*name, score, isZombie, */Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color));
     }
 
     public getId = () => this.id;

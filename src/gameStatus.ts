@@ -9,6 +9,9 @@ export class GameStatus {
     private eventList: any[];
 
     constructor() {
+        this.isGameStarted = false;
+        this.playerList = [];
+        this.eventList = [];
     }
 
     public static fromDto = ({isGameStarted, playerList = [], eventList}: StatusDto): GameStatus => {
