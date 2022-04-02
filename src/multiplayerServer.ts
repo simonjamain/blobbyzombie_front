@@ -3,11 +3,12 @@ import {HitDto} from "./dto/hitDto";
 import {ShootDto} from "./dto/ShootDto";
 import {PlayerStateDto} from "./dto/playerStateDto";
 import {StatusDto} from "./dto/statusDto";
-import { io } from "socket.io-client";
+import {io} from 'socket.io-client';
+import {Socket} from "socket.io-client/build/esm/socket";
 
 export class MultiplayerServer {
 
-    socket;
+    socket: Socket;
 
     constructor(serverUrl: string,
                 private whoisCallback: (player: PlayerDto) => void,

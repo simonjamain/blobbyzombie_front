@@ -12,6 +12,8 @@ declare global {
   interface Window { gameCanvas: HTMLCanvasElement; gameContext: CanvasRenderingContext2D;}
 }
 
+
+
 const onWhoisReceived = (player: PlayerDto) => {
   currentPlayer = Player.fromDto(player);
   manequinPlayer = new Player('manekin', new Vector2(10, 10), 0, new Vector3(255, 0, 0));
