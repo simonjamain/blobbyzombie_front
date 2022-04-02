@@ -1,5 +1,11 @@
+import {Vector2Dto} from "./dto/vector2Dto";
+
 export class Vector2 {
     constructor(public x: number, public y: number) {
+    }
+
+    public static fromDto(vector2Dto: Vector2Dto) {
+        return new Vector2(vector2Dto.x, vector2Dto.y);
     }
 
     public times(factor :number) {

@@ -1,6 +1,7 @@
-import { Shot } from './shot';
-import { Drawable } from './drawable';
-import { Vector2 } from './vector2';
+import {Shot} from './shot';
+import {Drawable} from './drawable';
+import {Vector2} from './vector2';
+import {Vector3} from "./vector3";
 
 export class Player implements Drawable{
     
@@ -10,17 +11,21 @@ export class Player implements Drawable{
     private static moveSpeed:number = 10;// meters/seconds
     private static turretRotationSpeed:number = 2;// rad/seconds
 
-    constructor(private position: Vector2, private aimingAngleRad: number) {
+    constructor(private position: Vector2, private aimingAngleRad: number, private color: Vector3) {
     }
 
     public shoot():Shot {
-        return new Shot(this.position, this.aimingAngleRad);
+        return new Shot(this.position, this.aimingAngleRad, this.getColor());
+    }
+
+    public getColor():Vector3 {
+        return this.color;
     }
 
     public draw(context: CanvasRenderingContext2D):void{
 	    context.save();
         // body
-	    context.fillStyle = "white";
+	    context.fillStyle = `rgba(${this.color.x}, ${this.color.y}, ${this.color.z})`;
         context.beginPath();
 	    context.arc(this.position.x, this.position.y, Player.radius, 0, 2 * Math.PI, false);
         context.fill();
@@ -32,7 +37,7 @@ export class Player implements Drawable{
         // console.log("aimingAngleRad", this.aimingAngleRad)
         context.moveTo(this.position.x, this.position.y);
         context.lineTo(barrelEndCoordinate.x, barrelEndCoordinate.y);
-        context.strokeStyle = 'white';
+        context.strokeStyle = `rgba(${this.color.x}, ${this.color.y}, ${this.color.z})`;
         context.lineWidth = Player.barrelWidth;
         context.stroke();
         context.restore();

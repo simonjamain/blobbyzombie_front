@@ -1,6 +1,7 @@
 import { Volatile } from './volatile';
 import { Drawable } from './drawable';
 import { Vector2 } from './vector2';
+import {Vector3} from "./vector3";
 
 export class Shot implements Drawable, Volatile{
 
@@ -9,7 +10,7 @@ export class Shot implements Drawable, Volatile{
     private static width = 2;
     private startTimestamp: DOMHighResTimeStamp;
 
-    constructor(private startPosition: Vector2, private aimingAngle: number) {
+    constructor(private startPosition: Vector2, private aimingAngle: number, private color: Vector3) {
         this.startTimestamp = performance.now();
     }
 
@@ -36,7 +37,7 @@ export class Shot implements Drawable, Volatile{
         // // console.log("shot aimingAngle", this.aimingAngle)
         context.moveTo(this.startPosition.x, this.startPosition.y);
         context.lineTo(shotEndCoordinate.x, shotEndCoordinate.y);
-        context.strokeStyle = `rgba(255, 255, 255,${this.getNormalizedTTL()*this.getNormalizedTTL()})`;
+        context.strokeStyle = `rgba(${this.color.x}, ${this.color.y}, ${this.color.z},${this.getNormalizedTTL()*this.getNormalizedTTL()})`;
         context.lineWidth = Shot.width * (this.getNormalizedTTL()*this.getNormalizedTTL()*this.getNormalizedTTL());
         context.stroke();
         context.restore();
