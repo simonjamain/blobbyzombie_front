@@ -7,14 +7,16 @@ export class GameControls {
   public moveDown: number;
   public rotateTurretClockwise: number;
   public rotateTurretCounterClockwise: number;
+  private shotCallBack: () => void;
 
-  constructor() {
+  constructor(shotCallBack:() => void) {
     this.moveLeft = 0;
     this.moveRight = 0;
     this.moveUp = 0;
     this.moveDown = 0;
     this.rotateTurretClockwise = 0;
     this.rotateTurretCounterClockwise = 0;
+    this.shotCallBack = shotCallBack;
 
     this.initListeners();
   }
@@ -27,51 +29,55 @@ export class GameControls {
   }
 
   public getAimRotation():number {
-    return this.rotateTurretClockwise - this.rotateTurretCounterClockwise;
+    return this.rotateTurretCounterClockwise - this.rotateTurretClockwise;
   } 
 
   private initListeners(): void {
     window.addEventListener("keydown", (e: KeyboardEvent) => {
       switch (e.key) {
-        case "ArrowLeft": // left arrow
+        case "q":
           this.moveLeft = 1;
           break;
-        case "ArrowUp": // up arrow
+        case "z":
           this.moveUp = 1;
           break;
-        case "ArrowRight": // right arrow
+        case "d":
           this.moveRight = 1;
           break;
-        case "ArrowDown": // down arrow
+        case "s":
           this.moveDown = 1;
           break;
-        case "d": // right arrow
+        case "ArrowLeft":
           this.rotateTurretClockwise = 1;
           break;
-        case "q": // down arrow
+        case "ArrowRight":
           this.rotateTurretCounterClockwise = 1;
+          break;
+        case "ArrowUp":
+        case " ":
+          this.shotCallBack();
           break;
       }
     }, false);
 
     window.addEventListener("keyup", (e: KeyboardEvent) => {
       switch (e.key) {
-        case "ArrowLeft": // left arrow
+        case "q":
           this.moveLeft = 0;
           break;
-        case "ArrowUp": // up arrow
+        case "z":
           this.moveUp = 0;
           break;
-        case "ArrowRight": // right arrow
+        case "d":
           this.moveRight = 0;
           break;
-        case "ArrowDown": // down arrow
+        case "s": // down arrow
           this.moveDown = 0;
           break;
-        case "d": // right arrow
+        case "ArrowLeft": // right arrow
           this.rotateTurretClockwise = 0;
           break;
-        case "q": // down arrow
+        case "ArrowRight": // down arrow
           this.rotateTurretCounterClockwise = 0;
           break;
       }

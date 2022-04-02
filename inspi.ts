@@ -342,7 +342,7 @@
 	      runningId = setInterval(function() {
 	        gameLoop();
 	      }, INTERVAL);
-	      console.log("play");
+	      // console.log("play");
 	    }
 	  }
 
@@ -352,7 +352,7 @@
 	    } else {
 	      clearInterval(runningId);
 	      runningId = -1;
-	      console.log("paused");
+	      // console.log("paused");
 	    }
 	  }
 

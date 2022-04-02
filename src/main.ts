@@ -1,3 +1,4 @@
+import { VolatileDrawableArray } from './volatileDrawableArray';
 import { Player } from "./player";
 import { Vector2 } from "./vector2";
 import { GameControls } from "./gameControls";
@@ -7,7 +8,8 @@ declare global {
 }
 
 let lastFrameTimestamp :number = 0;
-let currentPlayer = new Player(new Vector2(0,0), 0)
+let currentPlayer = new Player(new Vector2(0,0), 0);
+let gameObjects = new VolatileDrawableArray();
 
 let gameCanvas = document.getElementById("blobbyzombie") as HTMLCanvasElement;
 window.gameCanvas = gameCanvas;
@@ -17,7 +19,11 @@ window.gameContext = gameContext;
  * Pixels per meters
  */
 let scale = 30;
-const gameControls = new GameControls();
+const gameControls = new GameControls(shoot);
+
+function shoot() {
+  gameObjects.push(currentPlayer.shoot());
+}
 
 function update(timestamp: DOMHighResTimeStamp) {
   const deltaTimeSeconds = (timestamp - lastFrameTimestamp) / 1000;
@@ -31,6 +37,7 @@ function update(timestamp: DOMHighResTimeStamp) {
     gameControls.getAimRotation()
     )
   currentPlayer.draw(gameContext);
+  gameObjects.draw(gameContext);
 
   window.requestAnimationFrame(update);
   lastFrameTimestamp = timestamp;
