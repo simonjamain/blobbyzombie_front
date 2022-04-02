@@ -2,19 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GJLOP</title>
-  </head>
-  <body>
-    <h1>Vite Phaser Game</h1>
-    <p>This is an example of setting up a Phaser, TypeScript, Vite game</p>
-    <div class="window-controls">
-      <button onclick="_game.scale.toggleFullscreen()">fullscreen</button>
-      <button onclick="_game.sound.mute = !_game.sound.mute">mute</button>
-      <button onclick="window.location.reload(true)">refresh</button>
-    </div>
-    <div id="app"></div>
+    <title>Blobby Zombie</title>
+    <script
+			src="https://api.glop.legeay.dev/socket.io/socket.io.js"
+			onerror="
+			((e) => {
+				//alert('Serveur injoignable');
+			})()"
+		></script>
     <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body style="padding: 0; margin: 0; background: green">
+    <canvas id="blobbyzombie"></canvas>
   </body>
+  <style>
+    #blobbyzombie {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
 </html>

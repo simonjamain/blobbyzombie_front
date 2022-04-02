@@ -1,47 +1,47 @@
-import './style.css'
+import { Player } from "./player";
+import { Vector2 } from "./vector2";
+import { GameControls } from "./gameControls";
 
-import 'phaser';
-import { MenuScene } from './menu-scene';
-
-const GameConfig: Phaser.Types.Core.GameConfig = {
-  title: 'ExampleGame',
-  url: 'https://github.com/digitsensitive/phaser3-typescript',
-  version: '2.0',
-  width: 800,
-  height: 600,
-  type: Phaser.AUTO,
-  parent: 'app',
-  scene: [MenuScene],
-  input: {
-    keyboard: true
-  },
-  physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: { y: 0 },
-      debug: false
-    }
-  },
-  backgroundColor: '#300000',
-  render: { pixelArt: false, antialias: true },
-  scale: {
-    mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    // `fullscreenTarget` must be defined for phones to not have
-    // a small margin during fullscreen.
-    fullscreenTarget: 'app',
-    expandParent: false,
-  },
-};
-
-
-export class Game extends Phaser.Game {
-  constructor(config: Phaser.Types.Core.GameConfig) {
-    super(config);
-  }
+declare global {
+  interface Window { gameCanvas: HTMLCanvasElement; gameContext: CanvasRenderingContext2D;}
 }
 
-window.addEventListener('load', () => {
-  // Expose `_game` to allow debugging, mute button and fullscreen button
-  (window as any)._game = new Game(GameConfig);
-});
+let lastFrameTimestamp :number = 0;
+let currentPlayer = new Player(new Vector2(0,0))
+
+let gameCanvas = document.getElementById("blobbyzombie") as HTMLCanvasElement;
+window.gameCanvas = gameCanvas;
+let gameContext = gameCanvas.getContext("2d") as CanvasRenderingContext2D;
+window.gameContext = gameContext;
+/**
+ * Pixels per meters
+ */
+let scale = 30;
+const gameControls = new GameControls();
+
+function update(timestamp: DOMHighResTimeStamp) {
+  const deltaTimeSeconds = (timestamp - lastFrameTimestamp) / 1000;
+
+  gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+  gameContext.scale(scale, scale);
+
+  currentPlayer.update(deltaTimeSeconds, gameControls.getMovementVector())
+  currentPlayer.draw(gameContext);
+
+  window.requestAnimationFrame(update);
+  lastFrameTimestamp = timestamp;
+  gameContext.setTransform(1, 0, 0, 1, 0, 0);
+}
+
+window.requestAnimationFrame(update);
+
+
+// resize the canvas to fill browser window dynamically
+window.addEventListener('resize', resizeCanvas, false);
+        
+function resizeCanvas() {
+  gameCanvas.width = window.innerWidth;
+  gameCanvas.height = window.innerHeight;
+}
+
+resizeCanvas();
