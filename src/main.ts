@@ -7,7 +7,7 @@ declare global {
 }
 
 let lastFrameTimestamp :number = 0;
-let currentPlayer = new Player(new Vector2(0,0))
+let currentPlayer = new Player(new Vector2(0,0), new Vector2(1,1))
 
 let gameCanvas = document.getElementById("blobbyzombie") as HTMLCanvasElement;
 window.gameCanvas = gameCanvas;
