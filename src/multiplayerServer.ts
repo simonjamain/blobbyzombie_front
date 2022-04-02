@@ -4,7 +4,7 @@ import {ShootDto} from "./dto/ShootDto";
 import {PlayerStateDto} from "./dto/playerStateDto";
 import {StatusDto} from "./dto/statusDto";
 // @ts-ignore
-import io from "socket.io-client";
+// import io from "socket.io-client";
 
 
 export class MultiplayerServer {
