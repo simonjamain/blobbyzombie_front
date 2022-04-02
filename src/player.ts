@@ -2,17 +2,33 @@ import {Shot} from './shot';
 import {Drawable} from './drawable';
 import {Vector2} from './vector2';
 import {Vector3} from "./vector3";
+import {PlayerDto} from "./dto/playerDto";
 
 export class Player implements Drawable{
-    
+
     private static radius:number = 1;
     private static barrelLength:number = 1.5;
     private static barrelWidth:number = 0.2;
     private static moveSpeed:number = 10;// meters/seconds
     private static turretRotationSpeed:number = 2;// rad/seconds
 
-    constructor(private position: Vector2, private aimingAngleRad: number, private color: Vector3) {
+    constructor(private id: String,
+                // private name: string,
+                // private score: number,
+                // private isZombie: boolean,
+                private position: Vector2,
+                private aimingAngleRad: number,
+                private color: Vector3) {
+
     }
+
+    public static fromDto({id, /*name,*/ color, position,/* score, isZombie,*/ aimingAngleRad}: PlayerDto) {
+        return new Player(id, /*name, score, isZombie, */Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color));
+    }
+
+    public getId = () => this.id;
+    public getPosition = () => Vector2.fromVector(this.position);
+    public getAimingAngleRad= () => this.aimingAngleRad;
 
     public shoot(potentialPlayerVictims: Array<Player>):Shot {
         return new Shot(this.position, this.aimingAngleRad, this.getColor(), potentialPlayerVictims);
@@ -20,10 +36,6 @@ export class Player implements Drawable{
 
     public getColor():Vector3 {
         return this.color;
-    }
-
-    public getPosition():Vector2 {
-        return Vector2.fromVector(this.position);
     }
 
     public getRadius():number {
