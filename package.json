@@ -2,7 +2,7 @@
   "name": "ld48",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host --port 3001",
     "build": "tsc && vite build && cp ./.htaccess ./dist",
     "serve": "vite preview"
   },
