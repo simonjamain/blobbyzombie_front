@@ -1,3 +1,4 @@
+import { GameMap } from './gameMap';
 import {Vector2} from './vector2';
 import {Shot} from './shot';
 import {ShootDto} from './dto/ShootDto';
@@ -32,6 +33,8 @@ let gameStatus: GameStatus|null = null;
 let lastFrameTimestamp :number = 0;
 
 let gameObjects = new VolatileDrawableArray();
+
+let gameMap = new GameMap();
 
 let gameCanvas = document.getElementById("blobbyzombie") as HTMLCanvasElement;
 window.gameCanvas = gameCanvas;
@@ -74,7 +77,7 @@ const onStatusReceived = (status: StatusDto) => {
           if(shootDto.playerId !== undefined) {
             const shooter = gameStatus?.getPlayerById(shootDto.playerId);
             if(shooter !== undefined) {
-              console.log("received effectiverange", shootDto.effectiveRange);
+              // console.log("received effectiverange", shootDto.effectiveRange);
               const shot = new Shot(Vector2.fromDto(shootDto.origin), shootDto.direction, shooter.getColor(), [], ()=>{}, shootDto.effectiveRange);
               gameObjects.push(shot);
             }
@@ -118,7 +121,7 @@ function shoot() {
   if(gameStatus === null) return;
   if(currentPlayer === null) return;
 
-  console.log('ammo', currentPlayer.getAmmunitionsLeft());
+  // console.log('ammo', currentPlayer.getAmmunitionsLeft());
 
   if(currentPlayer.getIsZombie() || currentPlayer.getAmmunitionsLeft() <= 0) return;
 
@@ -132,7 +135,7 @@ function shoot() {
     playerId : currentPlayer?.getId(),
     effectiveRange: shotFired.getEffectiveRange()
   }
-  console.log("emmitted effectiverange", shootEvent.effectiveRange);
+  // console.log("emmitted effectiverange", shootEvent.effectiveRange);
   multiplayerServer.sendShoot(shootEvent);
 }
 
@@ -172,21 +175,26 @@ function update(timestamp: DOMHighResTimeStamp) {
 
       // UPDATE
     currentPlayer.update(
+      gameMap,
       deltaTimeSeconds,
       gameControls.getMovementVector(),
       gameControls.getAimRotation(),
       gameStatus.getPlayerById(currentPlayer.getId())?.getIsZombie());
 
-      // DRAW AFTER UPDATE
+    // DRAW AFTER UPDATE
+    gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+    gameContext.scale(scale, scale);
+
     const canvasCenter = new Vector2(
       gameCanvas.width / 2,
       gameCanvas.height / 2
     ).dividedBy(scale);
 
-    gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-    gameContext.scale(scale, scale);
     const cameraTranslation = currentPlayer.getPosition().minus(canvasCenter);
     gameContext.translate(-cameraTranslation.x, -cameraTranslation.y)
+
+    // DRAW here after translation
+    gameMap.draw(gameContext);
 
     multiplayerServer.sendPosition({
       position: {

@@ -1,3 +1,4 @@
+import { GameMap } from './gameMap';
 import {InfestDto} from './dto/infestDto';
 import {Shot} from './shot';
 import {Drawable} from './drawable';
@@ -48,6 +49,8 @@ export class Player implements Drawable{
     public shoot(potentialPlayerVictims: Array<Player>, hitCallBack:(victim:Player, shotAngleRad:number) => void):Shot {
 
         this.ammunitionsLeft--;
+
+        // console.log(this.position);
         
         return new Shot(this.position, this.aimingAngleRad, this.getColor(), potentialPlayerVictims, hitCallBack);
     }
@@ -115,11 +118,15 @@ export class Player implements Drawable{
         context.restore();
     }
 
-    public update(deltaTimeSeconds: number, movement: Vector2, aimRotation: number, isZombie?: boolean) {
+    public update(gameMap: GameMap, deltaTimeSeconds: number, movement: Vector2, aimRotation: number, isZombie?: boolean) {
         this.isZombie = isZombie !== undefined ? isZombie : this.getIsZombie();
         
         const scaledMovement = movement.times(deltaTimeSeconds * Player.moveSpeed);
-        this.position = this.position.add(scaledMovement);
+        const newPos = this.position.add(scaledMovement);
+
+        if(gameMap.isPlayerInsideMap(newPos)) {
+            this.position = newPos;
+        }
         
         // console.log("aimRotation", aimRotation)
         const scaledAimRotation = aimRotation * deltaTimeSeconds * Player.turretRotationSpeed;

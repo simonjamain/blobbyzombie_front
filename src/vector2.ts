@@ -19,6 +19,10 @@ export class Vector2 {
         return new Vector2(x, y);
     }
 
+    public distance() {
+        return Math.sqrt(this.x**2 + this.y**2);
+    }
+
     public dividedBy(divider :number) {
         const x = this.x / divider;
         const y = this.y / divider;
