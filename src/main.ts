@@ -23,7 +23,7 @@ const onStatusReceived = (status: StatusDto) => {
 }
 
 let url: string = "https://api.glop.legeay.dev";
-// url = "http://localhost:3000";
+url = "http://localhost:3000";
 
 const multiplayerServer = new MultiplayerServer(url, onWhoisReceived, onStatusReceived);
 
@@ -84,8 +84,7 @@ function update(timestamp: DOMHighResTimeStamp) {
     deltaTimeSeconds,
     gameControls.getMovementVector(),
     gameControls.getAimRotation(),
-    gameStatus.getPlayerById(currentPlayer.getId())?.getIsZombie()
-    )
+    gameStatus.getPlayerById(currentPlayer.getId())?.getIsZombie());
 
   gameStatus.drawPlayersExceptUs(currentPlayer.getId(), gameContext);
   currentPlayer.draw(gameContext);

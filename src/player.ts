@@ -67,8 +67,8 @@ export class Player implements Drawable{
         context.restore();
     }
 
-    public update(deltaTimeSeconds: number, movement: Vector2, aimRotation: number, isZombie: boolean) {
-        this.isZombie = isZombie;
+    public update(deltaTimeSeconds: number, movement: Vector2, aimRotation: number, isZombie?: boolean) {
+        this.isZombie = isZombie !== undefined ? isZombie : this.getIsZombie();
         
         const scaledMovement = movement.times(deltaTimeSeconds * Player.moveSpeed);
         this.position = this.position.add(scaledMovement);

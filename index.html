@@ -11,8 +11,15 @@
         height: 100vh;
       }
     </style>
-    <script
+    <!-- <script
             src="https://api.glop.legeay.dev/socket.io/socket.io.js"
+            onerror="
+			((e) => {
+				alert('Serveur injoignable');
+			})()"
+    ></script> -->
+    <script
+            src="http://localhost:3000/socket.io/socket.io.js"
             onerror="
 			((e) => {
 				alert('Serveur injoignable');
