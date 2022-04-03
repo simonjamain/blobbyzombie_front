@@ -123,7 +123,8 @@ function update(timestamp: DOMHighResTimeStamp) {
         x: currentPlayer.getPosition().x,
         y: currentPlayer.getPosition().y
       },
-      aimingAngleRad: currentPlayer.getAimingAngleRad()
+      aimingAngleRad: currentPlayer.getAimingAngleRad(),
+      ammunitionsLeft: currentPlayer.getAmmunitionsLeft()
     })
 
     currentPlayer.update(
