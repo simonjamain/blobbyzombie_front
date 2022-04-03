@@ -79,25 +79,32 @@ const onStatusReceived = (status: StatusDto) => {
         const hitDto = event as HitDto;
 
         if (hitDto.newZombie) {
-          const playersList = gameStatus!.getPlayerList();
-          const zombiesCount = playersList.filter(player => player.getIsZombie()).length;
-          const progression = zombiesCount / playersList.length;
-  
-          if (progression === 1) {
-            // END GAME (pas le film)
-            sound.gameOver();
-          } else {
-            sound.hitAndProgressTo(zombiesCount / playersList.length);
-          }
+          updateProgression();
         } else {
           sound.playEffect('zombie');
         }
+        break;
+      case "infest":
+        updateProgression();
         break;
     }
   });
 }
 
 const multiplayerServer = new MultiplayerServer(url, onWhoisReceived, onStatusReceived);
+
+function updateProgression() {
+  const playersList = gameStatus!.getPlayerList();
+  const zombiesCount = playersList.filter(player => player.getIsZombie()).length;
+  const progression = zombiesCount / playersList.length;
+
+  if (progression === 1) {
+    // END GAME (pas le film)
+    sound.gameOver();
+  } else {
+    sound.hitAndProgressTo(zombiesCount / playersList.length);
+  }
+}
 
 function shoot() {
   if(gameStatus === null) return;
