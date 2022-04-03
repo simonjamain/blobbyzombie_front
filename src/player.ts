@@ -14,6 +14,8 @@ export class Player implements Drawable{
     private static moveSpeed:number = 10;// meters/seconds
     private static turretRotationSpeed:number = 2;// rad/seconds
     private static maxAmmunitions: number = 5;
+    private static ammoWidth = 0.16;
+    private ammunitionsLeft: number;
 
     constructor(private id: string,
                 // private name: string,
@@ -21,9 +23,8 @@ export class Player implements Drawable{
                 private isZombie: boolean,
                 private position: Vector2,
                 private aimingAngleRad: number,
-                private color: Vector3,
-                private ammunitionsLeft: number) {
-        this.resetUser();
+                private color: Vector3) {
+        this.ammunitionsLeft = Player.maxAmmunitions;
     }
 
     public resetUser = () => {
@@ -31,7 +32,9 @@ export class Player implements Drawable{
     }
 
     public static fromDto({id, /*name,*/ color, position, score, isZombie, aimingAngleRad, ammunitionsLeft}: PlayerDto) {
-        return new Player(id, /*name,*/ score, isZombie, Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color), ammunitionsLeft);
+        const player = new Player(id, /*name,*/ score, isZombie, Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color));
+        player.setAmmunitions(ammunitionsLeft);
+        return player;
     }
 
     public getId = () => this.id;
@@ -42,7 +45,9 @@ export class Player implements Drawable{
     public getAmmunitionsLeft = () => this.ammunitionsLeft;
 
     public shoot(potentialPlayerVictims: Array<Player>, hitCallBack:(victim:Player, shotAngleRad:number) => void):Shot {
-        this.ammunitionsLeft -= 1;
+
+        this.ammunitionsLeft--;
+        
         return new Shot(this.position, this.aimingAngleRad, this.getColor(), potentialPlayerVictims, hitCallBack);
     }
 
@@ -52,6 +57,10 @@ export class Player implements Drawable{
 
     public getRadius():number {
         return Player.radius;
+    }
+
+    public setAmmunitions(munitionNumber: number){
+        this.ammunitionsLeft = munitionNumber;
     }
 
     public draw(context: CanvasRenderingContext2D):void{
@@ -73,6 +82,33 @@ export class Player implements Drawable{
             context.strokeStyle = `rgba(${this.color.x}, ${this.color.y}, ${this.color.z})`;
             context.lineWidth = Player.barrelWidth;
             context.stroke();
+        }
+
+        // amunitions
+        if(!this.isZombie) {
+            for (let munitionLeftIndex = 0; munitionLeftIndex < this.ammunitionsLeft; munitionLeftIndex++) {
+                
+                const ammoAngleGap = (Math.PI * 0.85) / Player.maxAmmunitions;
+
+                const ammoAngle = this.aimingAngleRad + Math.PI + ammoAngleGap * munitionLeftIndex;
+
+                const startLine = new Vector2(
+                    this.getPosition().x + Math.cos(ammoAngle) * this.getRadius() * 0.8,
+                    this.getPosition().y + Math.sin(ammoAngle) * this.getRadius() * 0.8
+                )
+                const endLine = new Vector2(
+                    this.getPosition().x + Math.cos(ammoAngle) * this.getRadius() * 0.45,
+                    this.getPosition().y + Math.sin(ammoAngle) * this.getRadius() * 0.45
+                )
+
+                context.strokeStyle = "black";
+                context.lineCap = 'round';
+                context.lineWidth = Player.ammoWidth;
+                context.beginPath();
+                context.moveTo(startLine.x, startLine.y);
+                context.lineTo(endLine.x, endLine.y);
+                context.stroke();
+            }
         }
 
         context.restore();

@@ -39,6 +39,7 @@ const gameControls = new GameControls(shoot);
 
 const onWhoisReceived = (player: PlayerDto) => {
   currentPlayer = Player.fromDto(player);
+  currentPlayer.resetUser();
   window.requestAnimationFrame(update);
 }
 
@@ -71,6 +72,8 @@ const multiplayerServer = new MultiplayerServer(url, onWhoisReceived, onStatusRe
 function shoot() {
   if(gameStatus === null) return;
   if(currentPlayer === null) return;
+
+  console.log('ammo', currentPlayer.getAmmunitionsLeft());
 
   if(currentPlayer.getIsZombie() || currentPlayer.getAmmunitionsLeft() <= 0) return;
 
