@@ -49,17 +49,20 @@ export class Player implements Drawable{
         context.beginPath();
 	    context.arc(this.position.x, this.position.y, Player.radius, 0, 2 * Math.PI, false);
         context.fill();
-        // turret
-        context.beginPath();
-        const barrelEndCoordinate = new Vector2(0, 0);
-        barrelEndCoordinate.x = this.position.x + Math.cos(this.aimingAngleRad) * Player.barrelLength
-        barrelEndCoordinate.y = this.position.y + Math.sin(this.aimingAngleRad) * Player.barrelLength
-        // console.log("aimingAngleRad", this.aimingAngleRad)
-        context.moveTo(this.position.x, this.position.y);
-        context.lineTo(barrelEndCoordinate.x, barrelEndCoordinate.y);
-        context.strokeStyle = `rgba(${this.color.x}, ${this.color.y}, ${this.color.z})`;
-        context.lineWidth = Player.barrelWidth;
-        context.stroke();
+
+        // barrel
+        if(!this.isZombie) {
+            context.beginPath();
+            const barrelEndCoordinate = new Vector2(0, 0);
+            barrelEndCoordinate.x = this.position.x + Math.cos(this.aimingAngleRad) * Player.barrelLength
+            barrelEndCoordinate.y = this.position.y + Math.sin(this.aimingAngleRad) * Player.barrelLength
+            context.moveTo(this.position.x, this.position.y);
+            context.lineTo(barrelEndCoordinate.x, barrelEndCoordinate.y);
+            context.strokeStyle = `rgba(${this.color.x}, ${this.color.y}, ${this.color.z})`;
+            context.lineWidth = Player.barrelWidth;
+            context.stroke();
+        }
+
         context.restore();
     }
 

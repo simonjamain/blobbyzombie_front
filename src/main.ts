@@ -22,7 +22,7 @@ const onStatusReceived = (status: StatusDto) => {
   gameStatus = GameStatus.fromDto(status);
 }
 
-let url: string = "https://api.glop.legeay.dev";y.dev";
+let url: string = "https://api.glop.legeay.dev";
 url = "http://localhost:3000";
 
 const multiplayerServer = new MultiplayerServer(url, onWhoisReceived, onStatusReceived);
