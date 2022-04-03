@@ -18,7 +18,7 @@ export class Player implements Drawable{
     private ammunitionsLeft: number;
 
     constructor(private id: string,
-                // private name: string,
+                private name: string,
                 private score: number,
                 private isZombie: boolean,
                 private position: Vector2,
@@ -31,8 +31,8 @@ export class Player implements Drawable{
         this.ammunitionsLeft = Player.maxAmmunitions;
     }
 
-    public static fromDto({id, /*name,*/ color, position, score, isZombie, aimingAngleRad, ammunitionsLeft}: PlayerDto) {
-        const player = new Player(id, /*name,*/ score, isZombie, Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color));
+    public static fromDto({id, name, color, position, score, isZombie, aimingAngleRad, ammunitionsLeft}: PlayerDto) {
+        const player = new Player(id, name, score, isZombie, Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color));
         player.setAmmunitions(ammunitionsLeft);
         return player;
     }
@@ -43,6 +43,7 @@ export class Player implements Drawable{
     public getPosition = () => Vector2.fromVector(this.position);
     public getAimingAngleRad= () => this.aimingAngleRad;
     public getAmmunitionsLeft = () => this.ammunitionsLeft;
+    public getName = () => this.name;
 
     public shoot(potentialPlayerVictims: Array<Player>, hitCallBack:(victim:Player, shotAngleRad:number) => void):Shot {
 

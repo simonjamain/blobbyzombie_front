@@ -16,6 +16,12 @@ declare global {
   interface Window { gameCanvas: HTMLCanvasElement; gameContext: CanvasRenderingContext2D;}
 }
 
+const middleMessageContainerEl = document.getElementById('middleScreenMessageContainer') as HTMLDivElement;
+const textMessage1 = document.getElementById('textMessage1') as HTMLDivElement;
+const textMessage2 = document.getElementById('textMessage2') as HTMLDivElement;
+const scoreList = document.getElementById('scoreList') as HTMLUListElement;
+
+
 let url: string;
 // url = "https://api.glop.legeay.dev";
 url = "http://localhost:3000";
@@ -153,6 +159,9 @@ function update(timestamp: DOMHighResTimeStamp) {
 
     if(!gameStatus.getIsGameStarted()) {
       currentPlayer.resetUser();
+      activeMiddleScreenMessage("Une nouvelle partie commence bientôt !", "Scores");
+    } else {
+      disableMiddleScreenMessage();
     }
 
       // UPDATE
@@ -206,3 +215,34 @@ function resizeCanvas() {
 }
 
 resizeCanvas();
+
+const activeMiddleScreenMessage = (msg1: string = "", msg2: string = ""): void => {
+  middleMessageContainerEl.style.display = "block";
+  textMessage1.textContent = msg1;
+  textMessage2.textContent = msg2;
+  insertScoreList(scoreList);
+}
+const disableMiddleScreenMessage = (): void => {
+  middleMessageContainerEl.style.display = "none";
+  scoreList.textContent = "";
+}
+
+const insertScoreList = (containerEl: HTMLUListElement) => {
+  if(gameStatus === null) return;
+  containerEl.textContent = "";
+
+  const playerListOrdered = gameStatus.getPlayersOrderedByScoreDesc();
+  let listSize = playerListOrdered?.length ?? 0;
+  listSize = listSize > 5 ? 5 : listSize;
+
+  for (let i = 0; i < listSize; i++) {
+    const currPlay: Player = playerListOrdered[i];
+    const liEl = document.createElement("li") as HTMLElement;
+    liEl.textContent = `${currPlay.getName()} : ${currPlay.getScore()}`;
+    if(currPlay.getId() === currentPlayer?.getId()) {
+      liEl.style.backgroundColor = `rgb(${currentPlayer.getColor().x},${currentPlayer.getColor().y},${currentPlayer.getColor().z})`;
+      liEl.style.color = "#000";
+    }
+    containerEl.appendChild(liEl);
+  }
+}

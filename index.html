@@ -20,6 +20,31 @@
         width: 100vw;
         height: 100vh;
       }
+      #middleScreenMessageContainer {
+        display: none;
+        position: fixed;
+        width: max-content;
+        height: max-content;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #f2f2f2;
+        font-family: sans-serif;
+        overflow: hidden;
+      }
+      #textMessage1,
+      #textMessage2 {
+        font-size: 3rem;
+      }
+      #scoreList{
+        list-style: none;
+        font-size: 2rem;
+      }
+      #scoreList > li {
+        margin-bottom: 10px;
+        padding: .5rem 1rem;
+        border-radius: 5px;
+      }
     </style>
     <script
             src="http://localhost:3000/socket.io/socket.io.js"
@@ -39,5 +64,10 @@
   </head>
   <body>
     <canvas id="blobbyzombie"></canvas>
+    <div id="middleScreenMessageContainer">
+      <p id="textMessage1"></p>
+      <p id="textMessage2"></p>
+      <ul id="scoreList"></ul>
+    </div>
   </body>
 </html>
