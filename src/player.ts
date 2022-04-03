@@ -1,10 +1,10 @@
-import { InfestDto } from './dto/infestDto';
+import {InfestDto} from './dto/infestDto';
 import {Shot} from './shot';
 import {Drawable} from './drawable';
 import {Vector2} from './vector2';
 import {Vector3} from "./vector3";
 import {PlayerDto} from "./dto/playerDto";
-import { circleCircleCollide } from './collisions';
+import {circleCircleCollide} from './collisions';
 
 export class Player implements Drawable{
 
@@ -16,7 +16,7 @@ export class Player implements Drawable{
 
     constructor(private id: string,
                 // private name: string,
-                // private score: number,
+                private score: number,
                 private isZombie: boolean,
                 private position: Vector2,
                 private aimingAngleRad: number,
@@ -24,11 +24,12 @@ export class Player implements Drawable{
 
     }
 
-    public static fromDto({id, /*name,*/ color, position,/* score,*/ isZombie, aimingAngleRad}: PlayerDto) {
-        return new Player(id, /*name, score,*/ isZombie, Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color));
+    public static fromDto({id, /*name,*/ color, position, score, isZombie, aimingAngleRad}: PlayerDto) {
+        return new Player(id, /*name,*/ score, isZombie, Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color));
     }
 
     public getId = () => this.id;
+    public getScore = () => this.score;
     public getIsZombie = (): boolean => this.isZombie;
     public getPosition = () => Vector2.fromVector(this.position);
     public getAimingAngleRad= () => this.aimingAngleRad;
@@ -81,6 +82,7 @@ export class Player implements Drawable{
     }
 
     public tryToInfestPlayers(potentialPlayerVictims: Array<Player>, infestCallBack: (infestDto: InfestDto) => void) {
+        if(!this.isZombie) return;
 
         potentialPlayerVictims.forEach((potentialVictim) => {
             if(

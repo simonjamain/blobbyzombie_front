@@ -23,24 +23,27 @@ export class GameStatus {
         return gameStatus;
     }
 
-    getPlayerById = (id: string): Player|undefined => this.playerList?.find(p => p.getId() === id);
+    public getPlayerById = (id: string): Player|undefined => this.playerList?.find(p => p.getId() === id);
 
     getPlayerListExceptUs = (currentPlayerId: string) => this.playerList?.filter(p => p.getId() !== currentPlayerId);
     getTankListExceptUs = (currentPlayerId: string) => this.playerList?.filter(p => p.getId() !== currentPlayerId && !p.getIsZombie());
 
-    drawPlayersExceptUs = (currentPlayerId: string, context: CanvasRenderingContext2D): void => {
+    public drawPlayersExceptUs = (currentPlayerId: string, context: CanvasRenderingContext2D): void => {
         this.getPlayerListExceptUs(currentPlayerId)?.forEach(p => p.draw(context));
     }
 
-    getIsGameStarted(): boolean {
+    public getIsGameStarted(): boolean {
         return this.isGameStarted;
     }
 
-    getPlayerList(): Player[] {
+    public getPlayerList(): Player[] {
         return this.playerList;
     }
 
     getEventList(): EventDto[] {
         return this.eventList;
     }
+
+    public getPlayersOrderedByScoreDesc = (): Player[] =>
+        this.playerList.sort((p1, p2) => p2.getScore() - p1.getScore());
 }
