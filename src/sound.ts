@@ -26,6 +26,10 @@ export class Sound {
     this.menu.volume = 0.1;
   }
 
+  isPlaying() {
+    return !this.audio.paused;
+  }
+
   gameOver() {
     this.audio.pause();
     this.over.play();

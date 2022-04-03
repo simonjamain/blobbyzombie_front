@@ -162,6 +162,10 @@ function update(timestamp: DOMHighResTimeStamp) {
       activeMiddleScreenMessage("Une nouvelle partie commence bientôt !", "Scores");
     } else {
       disableMiddleScreenMessage();
+
+      if (!sound.isPlaying()) {
+        sound.progressTo(0);
+      }
     }
 
       // UPDATE
