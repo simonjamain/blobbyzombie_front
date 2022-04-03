@@ -45,12 +45,14 @@ const gameControls = new GameControls(shoot);
 
 const sound = new Sound();
 let soundOn = false;
-window.addEventListener('keydown', () => { // wait for user interaction
+const onInteraction = () => {
   if (!soundOn) {
     sound.progressTo(0);
     soundOn = true;
   }
-})
+}
+window.addEventListener('keydown', onInteraction)
+window.addEventListener('click', onInteraction)
 
 const onWhoisReceived = (player: PlayerDto) => {
   currentPlayer = Player.fromDto(player);
