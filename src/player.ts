@@ -12,26 +12,26 @@ export class Player implements Drawable{
     private static moveSpeed:number = 10;// meters/seconds
     private static turretRotationSpeed:number = 2;// rad/seconds
 
-    constructor(private id: String,
+    constructor(private id: string,
                 // private name: string,
                 // private score: number,
-                // private isZombie: boolean,
+                private isZombie: boolean,
                 private position: Vector2,
                 private aimingAngleRad: number,
                 private color: Vector3) {
 
     }
 
-    public static fromDto({id, /*name,*/ color, position,/* score, isZombie,*/ aimingAngleRad}: PlayerDto) {
-        return new Player(id, /*name, score, isZombie, */Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color));
+    public static fromDto({id, /*name,*/ color, position,/* score,*/ isZombie, aimingAngleRad}: PlayerDto) {
+        return new Player(id, /*name, score,*/ isZombie, Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color));
     }
 
     public getId = () => this.id;
     public getPosition = () => Vector2.fromVector(this.position);
     public getAimingAngleRad= () => this.aimingAngleRad;
 
-    public shoot(potentialPlayerVictims: Array<Player>):Shot {
-        return new Shot(this.position, this.aimingAngleRad, this.getColor(), potentialPlayerVictims);
+    public shoot(potentialPlayerVictims: Array<Player>, hitCallBack:(victim:Player, shotAngleRad:number) => void):Shot {
+        return new Shot(this.position, this.aimingAngleRad, this.getColor(), potentialPlayerVictims, hitCallBack);
     }
 
     public getColor():Vector3 {

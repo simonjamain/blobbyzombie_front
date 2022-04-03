@@ -15,7 +15,7 @@ export class Shot implements Drawable, Volatile{
     private effectiveRange: number;
     private effectiveEndCoords: Vector2;
 
-    constructor(private startCoords: Vector2, private aimingAngle: number, private color: Vector3, potentialPlayerVictims: Array<Player>) {
+    constructor(private startCoords: Vector2, private aimingAngle: number, private color: Vector3, potentialPlayerVictims: Array<Player>, hitCallBack:(victim:Player, shotAngleRad:number) => void) {
         this.startTimestamp = performance.now();
 
         this.endCoords = new Vector2(
@@ -49,6 +49,7 @@ export class Shot implements Drawable, Volatile{
                 this.startCoords.x + Math.cos(this.aimingAngle) * this.effectiveRange,
                 this.startCoords.y + Math.sin(this.aimingAngle) * this.effectiveRange
             );
+            hitCallBack(nearestVictim, this.aimingAngle);
         }else{
             this.effectiveRange = Shot.range;
             this.effectiveEndCoords = this.endCoords;

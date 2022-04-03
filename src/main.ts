@@ -1,3 +1,4 @@
+import { HitDto } from './dto/hitDto';
 import {Vector3} from './vector3';
 import {Vector2} from './vector2';
 import {VolatileDrawableArray} from './volatileDrawableArray';
@@ -16,7 +17,6 @@ declare global {
 
 const onWhoisReceived = (player: PlayerDto) => {
   currentPlayer = Player.fromDto(player);
-  manequinPlayer = new Player('manekin', new Vector2(10, 10), 0, new Vector3(255, 0, 0));
   window.requestAnimationFrame(update);
 }
 
@@ -25,12 +25,11 @@ const onStatusReceived = (status: StatusDto) => {
 }
 
 let url: string = "https://api.glop.legeay.dev";
-// url = "http://localhost:3000";
+url = "http://localhost:3000";
 
 const multiplayerServer = new MultiplayerServer(url, onWhoisReceived, onStatusReceived);
 
 let currentPlayer: Player|null = null;
-let manequinPlayer: Player|null = null;
 let gameStatus: GameStatus|null = null;
 
 let lastFrameTimestamp :number = 0;
@@ -48,13 +47,24 @@ let scale = 30;
 const gameControls = new GameControls(shoot);
 
 function shoot() {
-  if(currentPlayer === null || manequinPlayer === null) return;
-  gameObjects.push(currentPlayer.shoot([manequinPlayer]));
+  if(currentPlayer === null) return;
+  // gameObjects.push(currentPlayer.shoot(, hit));
+}
+
+function hit(victim:Player, shotAngleRad:number) {
+  const hitEvent:HitDto = {
+    eventType : "hit",
+    victimId: victim.getId(),
+    direction: shotAngleRad,
+    impactCoord: victim.getPosition(),
+  }
+
+  multiplayerServer.sendHit(hitEvent);
 }
 
 
 function update(timestamp: DOMHighResTimeStamp) {
-  if(currentPlayer === null || manequinPlayer === null) return;
+  if(currentPlayer === null) return;
 
   const deltaTimeSeconds = (timestamp - lastFrameTimestamp) / 1000;
 
@@ -74,7 +84,6 @@ function update(timestamp: DOMHighResTimeStamp) {
       gameControls.getMovementVector(),
     gameControls.getAimRotation()
     )
-  manequinPlayer.draw(gameContext);
 
   if(gameStatus !== null && currentPlayer !== null) {
     gameStatus?.getPlayerList()?.filter(p => p.getId() !== currentPlayer?.getId()).forEach((p :Player) => p.draw(gameContext));
