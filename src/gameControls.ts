@@ -54,6 +54,7 @@ export class GameControls {
           this.rotateTurretCounterClockwise = 1;
           break;
         case "ArrowUp":
+        case "ArrowDown":
         case " ":
           this.shotCallBack();
           break;
