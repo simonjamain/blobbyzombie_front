@@ -72,17 +72,25 @@ const onStatusReceived = (status: StatusDto) => {
             }
           }
         }
+
+        sound.playEffect('fire');
         break;
       case "hit":
-        const playersList = gameStatus!.getPlayerList();
-        const zombiesCount = playersList.filter(player => player.getIsZombie()).length;
-        const progression = zombiesCount / playersList.length;
+        const hitDto = event as HitDto;
 
-        if (progression === 1) {
-          // END GAME (pas le film)
-          sound.gameOver();
+        if (hitDto.newZombie) {
+          const playersList = gameStatus!.getPlayerList();
+          const zombiesCount = playersList.filter(player => player.getIsZombie()).length;
+          const progression = zombiesCount / playersList.length;
+  
+          if (progression === 1) {
+            // END GAME (pas le film)
+            sound.gameOver();
+          } else {
+            sound.hitAndProgressTo(zombiesCount / playersList.length);
+          }
         } else {
-          sound.hitAndProgressTo(zombiesCount / playersList.length);
+          sound.playEffect('zombie');
         }
         break;
     }

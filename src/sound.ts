@@ -3,6 +3,11 @@ export class Sound {
   over = new Audio('../assets/over.mp3');
   menu = new Audio('../assets/menu.mp3');
 
+  effects: any = {
+    fire: new Audio('../assets/fire.mp3'),
+    zombie: new Audio('../assets/zombie.mp3')
+  }
+
   bpm = 128;
   measuresPerCycle = 8;
   chordsPerCycle = 4;
@@ -80,5 +85,15 @@ export class Sound {
         this.goToCycle(cycleMatchingProgression);
       }
     }
+  }
+
+  playEffect(effect: string) {
+    const effectToPlay = this.effects[effect].cloneNode();
+
+    if (effect === 'zombie') {
+      effectToPlay.volume = 0.2;
+    }
+
+    effectToPlay.play();
   }
 }
