@@ -1,6 +1,6 @@
-import { Vector2 } from './vector2';
-import { Shot } from './shot';
-import { ShootDto } from './dto/ShootDto';
+import {Vector2} from './vector2';
+import {Shot} from './shot';
+import {ShootDto} from './dto/ShootDto';
 import {InfestDto} from './dto/infestDto';
 import {HitDto} from './dto/hitDto';
 import {VolatileDrawableArray} from './volatileDrawableArray';
@@ -70,6 +70,8 @@ const gameControls = new GameControls(shoot);
 function shoot() {
   if(gameStatus === null) return;
   if(currentPlayer === null) return;
+
+  if(currentPlayer.getIsZombie()) return;
 
   gameObjects.push(currentPlayer.shoot(gameStatus.getPlayerListExceptUs(currentPlayer.getId()), hit));
 
