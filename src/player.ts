@@ -12,7 +12,7 @@ export class Player implements Drawable{
     private static moveSpeed:number = 10;// meters/seconds
     private static turretRotationSpeed:number = 2;// rad/seconds
 
-    constructor(private id: String,
+    constructor(private id: string,
                 // private name: string,
                 // private score: number,
                 // private isZombie: boolean,
