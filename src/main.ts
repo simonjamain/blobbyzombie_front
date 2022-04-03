@@ -104,7 +104,7 @@ const onStatusReceived = (status: StatusDto) => {
 
 const multiplayerServer = new MultiplayerServer(url, onWhoisReceived, onStatusReceived);
 
-function updateProgression(hit: boolean) {
+function updateProgression(hit?: boolean) {
   if (gameStatus?.getIsGameStarted()) {
     const playersList = gameStatus!.getPlayerList();
     const zombiesCount = playersList.filter(player => player.getIsZombie()).length;

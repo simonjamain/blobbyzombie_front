@@ -1,11 +1,21 @@
+import Music from '../assets/audio.mp3';
+import Over from '../assets/gameover.mp3';
+import Menu from '../assets/menu.mp3';
+import Fire from '../assets/fire.mp3';
+import Zombie from '../assets/zombie.mp3';
+import Hit0 from '../assets/hit0.mp3';
+import Hit1 from '../assets/hit1.mp3';
+import Hit2 from '../assets/hit2.mp3';
+import Hit3 from '../assets/hit3.mp3';
+
 export class Sound {
-  audio = new Audio('../assets/audio.mp3');
-  over = new Audio('../assets/gameover.mp3');
-  menu = new Audio('../assets/menu.mp3');
+  audio = new Audio(Music);
+  over = new Audio(Over);
+  menu = new Audio(Menu);
 
   effects: any = {
-    fire: new Audio('../assets/fire.mp3'),
-    zombie: new Audio('../assets/zombie.mp3')
+    fire: new Audio(Fire),
+    zombie: new Audio(Zombie)
   }
 
   bpm = 128;
@@ -18,9 +28,7 @@ export class Sound {
   currentCycle = 0;
   interval = 0;
 
-  hits = Array(this.chordsPerCycle)
-    .fill(undefined)
-    .map((_, index) => new Audio(`../assets/hit${index}.mp3`));
+  hits = [new Audio(Hit0), new Audio(Hit1), new Audio(Hit2), new Audio(Hit3)];
 
   constructor() {
     this.menu.volume = 0.1;
