@@ -27,6 +27,7 @@ export class Player implements Drawable{
     }
 
     public getId = () => this.id;
+    public getIsZombie = (): boolean => this.isZombie;
     public getPosition = () => Vector2.fromVector(this.position);
     public getAimingAngleRad= () => this.aimingAngleRad;
 
@@ -66,10 +67,12 @@ export class Player implements Drawable{
         context.restore();
     }
 
-    public update(deltaTimeSeconds: number, movement: Vector2, aimRotation: number) {
+    public update(deltaTimeSeconds: number, movement: Vector2, aimRotation: number, isZombie: boolean) {
+        this.isZombie = isZombie;
+        
         const scaledMovement = movement.times(deltaTimeSeconds * Player.moveSpeed);
         this.position = this.position.add(scaledMovement);
-
+        
         // console.log("aimRotation", aimRotation)
         const scaledAimRotation = aimRotation * deltaTimeSeconds * Player.turretRotationSpeed;
         this.aimingAngleRad = (this.aimingAngleRad + scaledAimRotation) % (Math.PI * 2);

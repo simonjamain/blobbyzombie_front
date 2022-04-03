@@ -22,6 +22,8 @@ export class GameStatus {
         return gameStatus;
     }
 
+    getPlayerById = (id: string): Player|undefined => this.playerList?.find(p => p.getId() === id);
+
     getPlayerListExceptUs = (currentPlayerId: string) => this.playerList?.filter(p => p.getId() !== currentPlayerId);
 
     drawPlayersExceptUs = (currentPlayerId: string, context: CanvasRenderingContext2D): void => {

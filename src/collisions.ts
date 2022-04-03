@@ -4,7 +4,7 @@ export function pointCircleCollide(pointCoords: Vector2, circleCoords: Vector2, 
     if (radius===0) return false;
     var dx = circleCoords.x - pointCoords.x;
     var dy = circleCoords.y - pointCoords.y;
-    return dx * dx + dy * dy <= radius * radius;
+    return dx**2 + dy**2 <= radius**2;
 }
 
 export function lineCircleCollide(lineStartCoords: Vector2, lineEndCoords: Vector2, circleCoords: Vector2, radius: number, nearest?: Vector2) {
@@ -57,4 +57,12 @@ export function lineCircleCollide(lineStartCoords: Vector2, lineEndCoords: Vecto
 
     //check collision
     return pointCircleCollide(nearest, circleCoords, radius) && pLen2 <= dLen2 && (px * dx + py * dy) >= 0;
+}
+
+export function circleCircleCollide(circle1Coords: Vector2, circle1Radius: number, circle2Coords: Vector2, circle2Radius: number) {
+    if (circle2Radius===0) return false;
+
+    var dx = circle2Coords.x - circle1Coords.x;
+    var dy = circle2Coords.y - circle1Coords.y;
+    return dx**2 + dy**2 <= (circle1Radius + circle2Radius)**2;
 }

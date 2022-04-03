@@ -82,8 +82,9 @@ function update(timestamp: DOMHighResTimeStamp) {
 
   currentPlayer.update(
     deltaTimeSeconds,
-      gameControls.getMovementVector(),
-    gameControls.getAimRotation()
+    gameControls.getMovementVector(),
+    gameControls.getAimRotation(),
+    gameStatus.getPlayerById(currentPlayer.getId())?.getIsZombie()
     )
 
   gameStatus.drawPlayersExceptUs(currentPlayer.getId(), gameContext);
