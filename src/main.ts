@@ -38,7 +38,13 @@ let scale = 30;
 const gameControls = new GameControls(shoot);
 
 const sound = new Sound();
-sound.progressTo(0);
+let soundOn = false;
+window.addEventListener('keydown', () => { // wait for user interaction
+  if (!soundOn) {
+    sound.progressTo(0);
+    soundOn = true;
+  }
+})
 
 const onWhoisReceived = (player: PlayerDto) => {
   currentPlayer = Player.fromDto(player);
