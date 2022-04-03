@@ -1,3 +1,4 @@
+import {EventDto} from './dto/EventDto';
 import {StatusDto} from "./dto/statusDto";
 import {Player} from "./player";
 import {PlayerDto} from "./dto/playerDto";
@@ -39,7 +40,7 @@ export class GameStatus {
         return this.playerList;
     }
 
-    getEventList(): any[] {
+    getEventList(): EventDto[] {
         return this.eventList;
     }
 }

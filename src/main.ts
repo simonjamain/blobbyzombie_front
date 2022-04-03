@@ -1,3 +1,6 @@
+import { Vector2 } from './vector2';
+import { Shot } from './shot';
+import { ShootDto } from './dto/ShootDto';
 import {InfestDto} from './dto/infestDto';
 import {HitDto} from './dto/hitDto';
 import {VolatileDrawableArray} from './volatileDrawableArray';
@@ -18,7 +21,27 @@ const onWhoisReceived = (player: PlayerDto) => {
 }
 
 const onStatusReceived = (status: StatusDto) => {
+  if(currentPlayer === null) return;
+
   gameStatus = GameStatus.fromDto(status);
+
+  gameStatus.getEventList().forEach(event => {
+    switch(event.eventType) {
+      case "shoot" :
+        const shootDto = event as ShootDto;
+
+        if(shootDto.playerId !== currentPlayer?.getId()) {
+          if(shootDto.playerId !== undefined) {
+            const shooter = gameStatus?.getPlayerById(shootDto.playerId);
+            if(shooter !== undefined) {
+              const shot = new Shot(Vector2.fromDto(shootDto.origin), shootDto.direction, shooter.getColor(), [], ()=>{});
+              gameObjects.push(shot);
+            }
+          }
+        }
+      break;
+    }
+  });
 }
 
 let url: string;
@@ -49,9 +72,19 @@ function shoot() {
   if(currentPlayer === null) return;
 
   gameObjects.push(currentPlayer.shoot(gameStatus.getPlayerListExceptUs(currentPlayer.getId()), hit));
+
+  const shootEvent:ShootDto = {
+    direction : currentPlayer.getAimingAngleRad(),
+    eventType : "shoot",
+    origin : currentPlayer?.getPosition(),
+    playerId : currentPlayer?.getId()
+  }
+  multiplayerServer.sendShoot(shootEvent);
 }
 
 function hit(victim:Player, shotAngleRad:number) {
+  if(currentPlayer === null) return;
+
   const hitEvent:HitDto = {
     eventType : "hit",
     victimId: victim.getId(),
