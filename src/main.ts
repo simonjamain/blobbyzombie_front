@@ -57,7 +57,8 @@ const onStatusReceived = (status: StatusDto) => {
           if(shootDto.playerId !== undefined) {
             const shooter = gameStatus?.getPlayerById(shootDto.playerId);
             if(shooter !== undefined) {
-              const shot = new Shot(Vector2.fromDto(shootDto.origin), shootDto.direction, shooter.getColor(), [], ()=>{});
+              console.log("received effectiverange", shootDto.effectiveRange);
+              const shot = new Shot(Vector2.fromDto(shootDto.origin), shootDto.direction, shooter.getColor(), [], ()=>{}, shootDto.effectiveRange);
               gameObjects.push(shot);
             }
           }
@@ -77,14 +78,17 @@ function shoot() {
 
   if(currentPlayer.getIsZombie() || currentPlayer.getAmmunitionsLeft() <= 0) return;
 
-  gameObjects.push(currentPlayer.shoot(gameStatus.getPlayerListExceptUs(currentPlayer.getId()), hit));
+  const shotFired = currentPlayer.shoot(gameStatus.getPlayerListExceptUs(currentPlayer.getId()), hit);
+  gameObjects.push(shotFired);
 
   const shootEvent:ShootDto = {
     direction : currentPlayer.getAimingAngleRad(),
     eventType : "shoot",
     origin : currentPlayer?.getPosition(),
-    playerId : currentPlayer?.getId()
+    playerId : currentPlayer?.getId(),
+    effectiveRange: shotFired.getEffectiveRange()
   }
+  console.log("emmitted effectiverange", shootEvent.effectiveRange);
   multiplayerServer.sendShoot(shootEvent);
 }
 

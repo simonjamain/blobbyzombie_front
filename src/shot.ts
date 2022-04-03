@@ -15,12 +15,14 @@ export class Shot implements Drawable, Volatile{
     private effectiveRange: number;
     private effectiveEndCoords: Vector2;
 
-    constructor(private startCoords: Vector2, private aimingAngle: number, private color: Vector3, potentialPlayerVictims: Array<Player>, hitCallBack:(victim:Player, shotAngleRad:number) => void) {
+    constructor(private startCoords: Vector2, private aimingAngle: number, private color: Vector3, potentialPlayerVictims: Array<Player>, hitCallBack:(victim:Player, shotAngleRad:number) => void, effectiveRange?:number) {
         this.startTimestamp = performance.now();
 
+        this.effectiveRange = effectiveRange ?? Shot.range;
+
         this.endCoords = new Vector2(
-            this.startCoords.x + Math.cos(this.aimingAngle) * Shot.range,
-            this.startCoords.y + Math.sin(this.aimingAngle) * Shot.range
+            this.startCoords.x + Math.cos(this.aimingAngle) * this.effectiveRange,
+            this.startCoords.y + Math.sin(this.aimingAngle) * this.effectiveRange
         );
 
         let nearestVictim:Player|null = null;
@@ -51,13 +53,16 @@ export class Shot implements Drawable, Volatile{
             );
             hitCallBack(nearestVictim, this.aimingAngle);
         }else{
-            this.effectiveRange = Shot.range;
             this.effectiveEndCoords = this.endCoords;
         }
     }
 
     private getElapsedTime():number {
         return performance.now() - this.startTimestamp;
+    }
+
+    public getEffectiveRange():number {
+        return this.effectiveRange;
     }
 
     /**
