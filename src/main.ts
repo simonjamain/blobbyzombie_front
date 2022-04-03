@@ -1,4 +1,4 @@
-import { HitDto } from './dto/hitDto';
+import {HitDto} from './dto/hitDto';
 import {VolatileDrawableArray} from './volatileDrawableArray';
 import {Player} from "./player";
 import {GameControls} from "./gameControls";
@@ -22,7 +22,8 @@ const onStatusReceived = (status: StatusDto) => {
   gameStatus = GameStatus.fromDto(status);
 }
 
-let url: string = "https://api.glop.legeay.dev";
+let url: string;
+// url = "https://api.glop.legeay.dev";
 url = "http://localhost:3000";
 
 const multiplayerServer = new MultiplayerServer(url, onWhoisReceived, onStatusReceived);
