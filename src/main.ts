@@ -86,7 +86,7 @@ function update(timestamp: DOMHighResTimeStamp) {
     )
 
   if(gameStatus !== null && currentPlayer !== null) {
-    gameStatus?.getPlayerList()?.filter(p => p.getId() !== currentPlayer?.getId()).forEach((p :Player) => p.draw(gameContext));
+    gameStatus.getDrawablePlayersExceptUs(currentPlayer.getId()).draw(gameContext);
     currentPlayer.draw(gameContext);
   }
 
