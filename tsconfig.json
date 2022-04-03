@@ -11,6 +11,12 @@
     "types": [
       "vite/client"
     ],
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "*"
+      ]
+    },
     "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

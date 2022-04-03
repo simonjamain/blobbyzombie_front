@@ -11,8 +11,6 @@ declare global {
   interface Window { gameCanvas: HTMLCanvasElement; gameContext: CanvasRenderingContext2D;}
 }
 
-
-
 const onWhoisReceived = (player: PlayerDto) => {
   currentPlayer = Player.fromDto(player);
   window.requestAnimationFrame(update);
