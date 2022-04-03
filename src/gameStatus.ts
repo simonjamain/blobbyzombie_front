@@ -1,7 +1,6 @@
 import {StatusDto} from "./dto/statusDto";
 import {Player} from "./player";
 import {PlayerDto} from "./dto/playerDto";
-import {DrawableArray} from "./drawableArray";
 
 export class GameStatus {
 
@@ -25,7 +24,9 @@ export class GameStatus {
 
     getPlayerListExceptUs = (currentPlayerId: string) => this.playerList?.filter(p => p.getId() !== currentPlayerId);
 
-    getDrawablePlayersExceptUs = (currentPlayerId: string): DrawableArray => (this.getPlayerListExceptUs(currentPlayerId) as unknown as DrawableArray);
+    drawPlayersExceptUs = (currentPlayerId: string, context: CanvasRenderingContext2D): void => {
+        this.getPlayerListExceptUs(currentPlayerId)?.forEach(p => p.draw(context));
+    }
 
     getIsGameStarted(): boolean {
         return this.isGameStarted;
