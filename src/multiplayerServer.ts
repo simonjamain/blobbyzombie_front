@@ -1,3 +1,4 @@
+import { InfestDto } from './dto/infestDto';
 import {PlayerDto} from "./dto/playerDto";
 import {HitDto} from "./dto/hitDto";
 import {ShootDto} from "./dto/ShootDto";
@@ -23,6 +24,11 @@ export class MultiplayerServer {
     sendHit(hit: HitDto) {
         hit.eventType = "hit";
         this.socket.emit('event', hit)
+    }
+    
+    sendInfest(infest: InfestDto) {
+        infest.eventType = "infest";
+        this.socket.emit('event', infest);
     }
 
     sendShoot(shoot: ShootDto) {

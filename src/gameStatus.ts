@@ -25,6 +25,7 @@ export class GameStatus {
     getPlayerById = (id: string): Player|undefined => this.playerList?.find(p => p.getId() === id);
 
     getPlayerListExceptUs = (currentPlayerId: string) => this.playerList?.filter(p => p.getId() !== currentPlayerId);
+    getTankListExceptUs = (currentPlayerId: string) => this.playerList?.filter(p => p.getId() !== currentPlayerId && !p.getIsZombie());
 
     drawPlayersExceptUs = (currentPlayerId: string, context: CanvasRenderingContext2D): void => {
         this.getPlayerListExceptUs(currentPlayerId)?.forEach(p => p.draw(context));

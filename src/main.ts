@@ -1,3 +1,4 @@
+import { InfestDto } from './dto/infestDto';
 import { HitDto } from './dto/hitDto';
 import {VolatileDrawableArray} from './volatileDrawableArray';
 import {Player} from "./player";
@@ -62,6 +63,10 @@ function hit(victim:Player, shotAngleRad:number) {
   multiplayerServer.sendHit(hitEvent);
 }
 
+function infest(infest: InfestDto) {
+  multiplayerServer.sendInfest(infest);
+}
+
 
 function update(timestamp: DOMHighResTimeStamp) {
   if(currentPlayer === null) return;
@@ -85,6 +90,8 @@ function update(timestamp: DOMHighResTimeStamp) {
     gameControls.getMovementVector(),
     gameControls.getAimRotation(),
     gameStatus.getPlayerById(currentPlayer.getId())?.getIsZombie());
+
+  currentPlayer.tryToInfestPlayers(gameStatus.getTankListExceptUs(currentPlayer.getId()), infest);
 
   gameStatus.drawPlayersExceptUs(currentPlayer.getId(), gameContext);
   currentPlayer.draw(gameContext);

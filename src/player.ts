@@ -1,8 +1,10 @@
+import { InfestDto } from './dto/infestDto';
 import {Shot} from './shot';
 import {Drawable} from './drawable';
 import {Vector2} from './vector2';
 import {Vector3} from "./vector3";
 import {PlayerDto} from "./dto/playerDto";
+import { circleCircleCollide } from './collisions';
 
 export class Player implements Drawable{
 
@@ -76,5 +78,25 @@ export class Player implements Drawable{
         // console.log("aimRotation", aimRotation)
         const scaledAimRotation = aimRotation * deltaTimeSeconds * Player.turretRotationSpeed;
         this.aimingAngleRad = (this.aimingAngleRad + scaledAimRotation) % (Math.PI * 2);
+    }
+
+    public tryToInfestPlayers(potentialPlayerVictims: Array<Player>, infestCallBack: (infestDto: InfestDto) => void) {
+
+        potentialPlayerVictims.forEach((potentialVictim) => {
+            if(
+                circleCircleCollide(
+                    this.getPosition(),
+                    this.getRadius(),
+                    potentialVictim.getPosition(),
+                    potentialVictim.getRadius()
+                )
+            ) {
+                const infest: InfestDto = {
+                    eventType : "infest",
+                    victimId : potentialVictim.getId()
+                }
+                infestCallBack(infest);
+            }
+        });
     }
 }
