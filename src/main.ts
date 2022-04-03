@@ -66,7 +66,19 @@ const onStatusReceived = (status: StatusDto) => {
             }
           }
         }
-      break;
+        break;
+      case "hit":
+        const playersList = gameStatus!.getPlayerList();
+        const zombiesCount = playersList.filter(player => player.getIsZombie()).length;
+        const progression = zombiesCount / playersList.length;
+
+        if (progression === 1) {
+          // END GAME (pas le film)
+          sound.gameOver();
+        } else {
+          sound.hitAndProgressTo(zombiesCount / playersList.length);
+        }
+        break;
     }
   });
 }

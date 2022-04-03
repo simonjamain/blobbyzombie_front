@@ -19,31 +19,16 @@ export class Sound {
 
   constructor() {
     this.menu.volume = 0.1;
-    console.log('sdfsd')
   }
 
-  // progression.addEventListener('click', () => {
-  //   const progressionFactor = parseFloat(prompt('Progression du jeu entre 0 (début) et 1 (hors jeu) ?'));
-  //   progressTo(progressionFactor);
-  // });
+  gameOver() {
+    this.audio.pause();
+    this.over.play();
 
-  // hit.addEventListener('click', () => {
-  //   const progressionFactor = parseFloat(prompt('Progression du jeu entre 0 (début) et 1 (hors jeu) ?'));
-  //   playHit();
-
-  //   setTimeout(() => {
-  //     progressTo(progressionFactor);
-  //   }, 250);
-  // });
-
-  // game_over.addEventListener('click', () => {
-  //   audio.pause();
-  //   over.play();
-
-  //   setTimeout(() => {
-  //     progressTo(1);
-  //   }, 2500);
-  // });
+    setTimeout(() => {
+      this.progressTo(1);
+    }, 2500);
+  }
 
   goToCycle(cycle: number) {
     if (cycle >= this.numberOfCycles) {
@@ -56,32 +41,22 @@ export class Sound {
     this.audio.currentTime = (this.cycleDurationInSeconds * this.currentCycle) + this.getPlayPositionInCycle();
   }
 
-  // playHit() {
-  //   currentMeasure = Math.ceil((getPlayPositionInCycle() / cycleDurationInSeconds) * chordsPerCycle) || 1;
-  //   console.log(`Current measure is ${currentMeasure}`);
+  playHit() {
+    const currentMeasure = Math.ceil((this.getPlayPositionInCycle() / this.cycleDurationInSeconds) * this.chordsPerCycle) || 1;
 
-  //   const hit = hits[currentMeasure - 1].cloneNode();
-  //   hit.volume = 0.3;
-  //   hit.play();
-  // }
+    const hit = this.hits[currentMeasure - 1].cloneNode() as any;
+    hit.volume = 0.3;
+    hit.play();
+  }
 
   getPlayPositionInCycle() {
     return this.audio.currentTime % this.cycleDurationInSeconds;
   }
 
-  // refreshInterval() {
-  //   if (interval) {
-  //     clearInterval(interval);
-  //   }
-
-  //   interval = setInterval(() => {
-  //     if (currentCycle < currentCycle - 1) {
-  //       currentCycle++;
-
-  //       console.log(`Now playing cycle ${currentCycle}`);
-  //     }
-  //   }, cycleDurationInSeconds * 1000);
-  // }
+  hitAndProgressTo(progressionFactor: number) {
+    this.playHit();
+    setTimeout(() => this.progressTo(progressionFactor), 250);
+  }
 
   progressTo(progressionFactor: number) {
     console.log('progress to', progressionFactor);
