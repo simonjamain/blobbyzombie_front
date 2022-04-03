@@ -5,5 +5,5 @@ export interface HitDto extends EventDto {
     victimId: string;
     direction: number;
     impactCoord: Vector2Dto;
-    newZombie: boolean;
+    newZombie?: boolean;
 }
