@@ -1,6 +1,4 @@
 import { HitDto } from './dto/hitDto';
-import {Vector3} from './vector3';
-import {Vector2} from './vector2';
 import {VolatileDrawableArray} from './volatileDrawableArray';
 import {Player} from "./player";
 import {GameControls} from "./gameControls";
@@ -47,8 +45,10 @@ let scale = 30;
 const gameControls = new GameControls(shoot);
 
 function shoot() {
+  if(gameStatus === null) return;
   if(currentPlayer === null) return;
-  // gameObjects.push(currentPlayer.shoot(, hit));
+
+  gameObjects.push(currentPlayer.shoot(gameStatus.getPlayerListExceptUs(currentPlayer.getId()), hit));
 }
 
 function hit(victim:Player, shotAngleRad:number) {
@@ -65,6 +65,7 @@ function hit(victim:Player, shotAngleRad:number) {
 
 function update(timestamp: DOMHighResTimeStamp) {
   if(currentPlayer === null) return;
+  if(gameStatus === null) return;
 
   const deltaTimeSeconds = (timestamp - lastFrameTimestamp) / 1000;
 
@@ -85,10 +86,8 @@ function update(timestamp: DOMHighResTimeStamp) {
     gameControls.getAimRotation()
     )
 
-  if(gameStatus !== null && currentPlayer !== null) {
-    gameStatus.getDrawablePlayersExceptUs(currentPlayer.getId()).draw(gameContext);
-    currentPlayer.draw(gameContext);
-  }
+  gameStatus.getDrawablePlayersExceptUs(currentPlayer.getId()).draw(gameContext);
+  currentPlayer.draw(gameContext);
 
   gameObjects.draw(gameContext);
 
