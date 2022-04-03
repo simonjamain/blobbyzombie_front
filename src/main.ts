@@ -24,8 +24,9 @@ const onStatusReceived = (status: StatusDto) => {
   gameStatus = GameStatus.fromDto(status);
 }
 
-let url: string = "https://api.glop.legeay.dev";
-// url = "http://localhost:3000";
+let url: string;
+// url = "https://api.glop.legeay.dev";
+url = "http://localhost:3000";
 
 const multiplayerServer = new MultiplayerServer(url, onWhoisReceived, onStatusReceived);
 
@@ -77,7 +78,7 @@ function update(timestamp: DOMHighResTimeStamp) {
   manequinPlayer.draw(gameContext);
 
   if(gameStatus !== null && currentPlayer !== null) {
-    gameStatus.getDrawablePlayersExceptUs(currentPlayer.getId()).draw(gameContext);
+    gameStatus.drawPlayersExceptUs(currentPlayer.getId(), gameContext);
     currentPlayer.draw(gameContext);
   }
 
