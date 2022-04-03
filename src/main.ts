@@ -10,6 +10,7 @@ import {PlayerDto} from "./dto/playerDto";
 import {StatusDto} from "./dto/statusDto";
 import {MultiplayerServer} from "./multiplayerServer";
 import {GameStatus} from "./gameStatus";
+import {Sound} from './sound';
 
 declare global {
   interface Window { gameCanvas: HTMLCanvasElement; gameContext: CanvasRenderingContext2D;}
@@ -36,6 +37,8 @@ window.gameContext = gameContext;
 let scale = 30;
 const gameControls = new GameControls(shoot);
 
+const sound = new Sound();
+sound.progressTo(0);
 
 const onWhoisReceived = (player: PlayerDto) => {
   currentPlayer = Player.fromDto(player);
