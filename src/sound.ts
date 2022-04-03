@@ -1,6 +1,6 @@
 export class Sound {
   audio = new Audio('../assets/audio.mp3');
-  over = new Audio('../assets/over.mp3');
+  over = new Audio('../assets/gameover.mp3');
   menu = new Audio('../assets/menu.mp3');
 
   effects: any = {
