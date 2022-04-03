@@ -72,7 +72,7 @@ function shoot() {
   if(gameStatus === null) return;
   if(currentPlayer === null) return;
 
-  if(currentPlayer.getIsZombie()) return;
+  if(currentPlayer.getIsZombie() || currentPlayer.getAmmunitionsLeft() <= 0) return;
 
   gameObjects.push(currentPlayer.shoot(gameStatus.getPlayerListExceptUs(currentPlayer.getId()), hit));
 
@@ -106,6 +106,11 @@ function infest(infest: InfestDto) {
 function update(timestamp: DOMHighResTimeStamp) {
 
   if (currentPlayer !== null && gameStatus !== null) {
+
+    if(!gameStatus.getIsGameStarted()) {
+      currentPlayer.resetUser();
+    }
+
     const deltaTimeSeconds = (timestamp - lastFrameTimestamp) / 1000;
     gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
     gameContext.scale(scale, scale);

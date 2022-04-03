@@ -9,6 +9,7 @@ export interface PlayerDto {
     score: number;
     isZombie: boolean;
     aimingAngleRad: number;
+    ammunitionsLeft: number;
 }
 
 

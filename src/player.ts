@@ -13,6 +13,7 @@ export class Player implements Drawable{
     private static barrelWidth:number = 0.2;
     private static moveSpeed:number = 10;// meters/seconds
     private static turretRotationSpeed:number = 2;// rad/seconds
+    private static maxAmmunitions: number = 5;
 
     constructor(private id: string,
                 // private name: string,
@@ -20,12 +21,17 @@ export class Player implements Drawable{
                 private isZombie: boolean,
                 private position: Vector2,
                 private aimingAngleRad: number,
-                private color: Vector3) {
-
+                private color: Vector3,
+                private ammunitionsLeft: number) {
+        this.resetUser();
     }
 
-    public static fromDto({id, /*name,*/ color, position, score, isZombie, aimingAngleRad}: PlayerDto) {
-        return new Player(id, /*name,*/ score, isZombie, Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color));
+    public resetUser = () => {
+        this.ammunitionsLeft = Player.maxAmmunitions;
+    }
+
+    public static fromDto({id, /*name,*/ color, position, score, isZombie, aimingAngleRad, ammunitionsLeft}: PlayerDto) {
+        return new Player(id, /*name,*/ score, isZombie, Vector2.fromDto(position), aimingAngleRad, Vector3.fromDto(color), ammunitionsLeft);
     }
 
     public getId = () => this.id;
@@ -33,8 +39,10 @@ export class Player implements Drawable{
     public getIsZombie = (): boolean => this.isZombie;
     public getPosition = () => Vector2.fromVector(this.position);
     public getAimingAngleRad= () => this.aimingAngleRad;
+    public getAmmunitionsLeft = () => this.ammunitionsLeft;
 
     public shoot(potentialPlayerVictims: Array<Player>, hitCallBack:(victim:Player, shotAngleRad:number) => void):Shot {
+        this.ammunitionsLeft -= 1;
         return new Shot(this.position, this.aimingAngleRad, this.getColor(), potentialPlayerVictims, hitCallBack);
     }
 
