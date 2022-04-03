@@ -128,14 +128,29 @@ function infest(infest: InfestDto) {
 function update(timestamp: DOMHighResTimeStamp) {
 
   if (currentPlayer !== null && gameStatus !== null) {
+    const deltaTimeSeconds = (timestamp - lastFrameTimestamp) / 1000;
 
     if(!gameStatus.getIsGameStarted()) {
       currentPlayer.resetUser();
     }
 
-    const deltaTimeSeconds = (timestamp - lastFrameTimestamp) / 1000;
+      // UPDATE
+    currentPlayer.update(
+      deltaTimeSeconds,
+      gameControls.getMovementVector(),
+      gameControls.getAimRotation(),
+      gameStatus.getPlayerById(currentPlayer.getId())?.getIsZombie());
+
+      // DRAW AFTER UPDATE
+    const canvasCenter = new Vector2(
+      gameCanvas.width / 2,
+      gameCanvas.height / 2
+    ).dividedBy(scale);
+
     gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
     gameContext.scale(scale, scale);
+    const cameraTranslation = currentPlayer.getPosition().minus(canvasCenter);
+    gameContext.translate(-cameraTranslation.x, -cameraTranslation.y)
 
     multiplayerServer.sendPosition({
       position: {
@@ -146,11 +161,6 @@ function update(timestamp: DOMHighResTimeStamp) {
       ammunitionsLeft: currentPlayer.getAmmunitionsLeft()
     })
 
-    currentPlayer.update(
-        deltaTimeSeconds,
-        gameControls.getMovementVector(),
-        gameControls.getAimRotation(),
-        gameStatus.getPlayerById(currentPlayer.getId())?.getIsZombie());
 
     currentPlayer.tryToInfestPlayers(gameStatus.getTankListExceptUs(currentPlayer.getId()), infest);
 

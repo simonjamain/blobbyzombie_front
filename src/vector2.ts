@@ -19,10 +19,24 @@ export class Vector2 {
         return new Vector2(x, y);
     }
 
+    public dividedBy(divider :number) {
+        const x = this.x / divider;
+        const y = this.y / divider;
+
+        return new Vector2(x, y);
+    }
+
     public add(vector :Vector2) {
         const x = this.x + vector.x;
         const y = this.y + vector.y;
         
+        return new Vector2(x, y);
+    }
+
+    public minus(vector :Vector2) {
+        const x = this.x - vector.x;
+        const y = this.y - vector.y;
+      
         return new Vector2(x, y);
     }
 
