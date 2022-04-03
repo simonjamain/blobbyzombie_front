@@ -15,6 +15,28 @@ declare global {
   interface Window { gameCanvas: HTMLCanvasElement; gameContext: CanvasRenderingContext2D;}
 }
 
+let url: string;
+// url = "https://api.glop.legeay.dev";
+url = "http://localhost:3000";
+
+let currentPlayer: Player|null = null;
+let gameStatus: GameStatus|null = null;
+
+let lastFrameTimestamp :number = 0;
+
+let gameObjects = new VolatileDrawableArray();
+
+let gameCanvas = document.getElementById("blobbyzombie") as HTMLCanvasElement;
+window.gameCanvas = gameCanvas;
+let gameContext = gameCanvas.getContext("2d") as CanvasRenderingContext2D;
+window.gameContext = gameContext;
+/**
+ * Pixels per meters
+ */
+let scale = 30;
+const gameControls = new GameControls(shoot);
+
+
 const onWhoisReceived = (player: PlayerDto) => {
   currentPlayer = Player.fromDto(player);
   window.requestAnimationFrame(update);
@@ -44,28 +66,7 @@ const onStatusReceived = (status: StatusDto) => {
   });
 }
 
-let url: string;
-// url = "https://api.glop.legeay.dev";
-url = "http://localhost:3000";
-
 const multiplayerServer = new MultiplayerServer(url, onWhoisReceived, onStatusReceived);
-
-let currentPlayer: Player|null = null;
-let gameStatus: GameStatus|null = null;
-
-let lastFrameTimestamp :number = 0;
-
-let gameObjects = new VolatileDrawableArray();
-
-let gameCanvas = document.getElementById("blobbyzombie") as HTMLCanvasElement;
-window.gameCanvas = gameCanvas;
-let gameContext = gameCanvas.getContext("2d") as CanvasRenderingContext2D;
-window.gameContext = gameContext;
-/**
- * Pixels per meters
- */
-let scale = 30;
-const gameControls = new GameControls(shoot);
 
 function shoot() {
   if(gameStatus === null) return;
@@ -103,38 +104,38 @@ function infest(infest: InfestDto) {
 
 
 function update(timestamp: DOMHighResTimeStamp) {
-  if(currentPlayer === null) return;
-  if(gameStatus === null) return;
 
-  const deltaTimeSeconds = (timestamp - lastFrameTimestamp) / 1000;
+  if (currentPlayer !== null && gameStatus !== null) {
+    const deltaTimeSeconds = (timestamp - lastFrameTimestamp) / 1000;
+    gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+    gameContext.scale(scale, scale);
 
-  gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-  gameContext.scale(scale, scale);
+    multiplayerServer.sendPosition({
+      position: {
+        x: currentPlayer.getPosition().x,
+        y: currentPlayer.getPosition().y
+      },
+      aimingAngleRad: currentPlayer.getAimingAngleRad()
+    })
 
-  multiplayerServer.sendPosition({
-    position: {
-      x: currentPlayer.getPosition().x,
-      y: currentPlayer.getPosition().y
-    },
-    aimingAngleRad: currentPlayer.getAimingAngleRad()
-  })
+    currentPlayer.update(
+        deltaTimeSeconds,
+        gameControls.getMovementVector(),
+        gameControls.getAimRotation(),
+        gameStatus.getPlayerById(currentPlayer.getId())?.getIsZombie());
 
-  currentPlayer.update(
-    deltaTimeSeconds,
-    gameControls.getMovementVector(),
-    gameControls.getAimRotation(),
-    gameStatus.getPlayerById(currentPlayer.getId())?.getIsZombie());
+    currentPlayer.tryToInfestPlayers(gameStatus.getTankListExceptUs(currentPlayer.getId()), infest);
 
-  currentPlayer.tryToInfestPlayers(gameStatus.getTankListExceptUs(currentPlayer.getId()), infest);
+    gameStatus.drawPlayersExceptUs(currentPlayer.getId(), gameContext);
+    currentPlayer.draw(gameContext);
 
-  gameStatus.drawPlayersExceptUs(currentPlayer.getId(), gameContext);
-  currentPlayer.draw(gameContext);
-  
-  gameObjects.draw(gameContext);
+    gameObjects.draw(gameContext);
+    gameContext.setTransform(1, 0, 0, 1, 0, 0);
+  }
 
   window.requestAnimationFrame(update);
   lastFrameTimestamp = timestamp;
-  gameContext.setTransform(1, 0, 0, 1, 0, 0);
+
 }
 
 // resize the canvas to fill browser window dynamically
