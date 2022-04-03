@@ -76,6 +76,7 @@ export class Sound {
         this.audio.currentTime = 0;
         this.currentCycle = 0;
         this.audio.play();
+        this.refreshInterval();
         this.menu.pause();
       }
 
@@ -95,5 +96,20 @@ export class Sound {
     }
 
     effectToPlay.play();
+  }
+
+  private refreshInterval() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+
+    this.interval = setInterval(() => {
+
+      if (this.currentCycle < this.numberOfCycles - 1) {
+        this.currentCycle++;
+
+        console.log(`Now playing cycle ${this.currentCycle}`);
+      }
+    }, this.cycleDurationInSeconds * 1000);
   }
 }
