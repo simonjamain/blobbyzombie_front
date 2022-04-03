@@ -50,7 +50,7 @@ const sound = new Sound();
 let soundOn = false;
 const onInteraction = () => {
   if (!soundOn) {
-    sound.progressTo(0);
+    updateProgression();
     soundOn = true;
   }
 }
@@ -90,13 +90,13 @@ const onStatusReceived = (status: StatusDto) => {
         const hitDto = event as HitDto;
 
         if (hitDto.newZombie) {
-          updateProgression();
+          updateProgression(true);
         } else {
           sound.playEffect('zombie');
         }
         break;
       case "infest":
-        updateProgression();
+        updateProgression(true);
         break;
     }
   });
@@ -104,16 +104,24 @@ const onStatusReceived = (status: StatusDto) => {
 
 const multiplayerServer = new MultiplayerServer(url, onWhoisReceived, onStatusReceived);
 
-function updateProgression() {
-  const playersList = gameStatus!.getPlayerList();
-  const zombiesCount = playersList.filter(player => player.getIsZombie()).length;
-  const progression = zombiesCount / playersList.length;
+function updateProgression(hit: boolean) {
+  if (gameStatus?.getIsGameStarted()) {
+    const playersList = gameStatus!.getPlayerList();
+    const zombiesCount = playersList.filter(player => player.getIsZombie()).length;
+    const progression = zombiesCount / playersList.length;
 
-  if (progression === 1) {
-    // END GAME (pas le film)
-    sound.gameOver();
+    if (progression === 1) {
+      // END GAME (pas le film)
+      sound.gameOver();
+    } else {
+      if (hit) {
+        sound.hitAndProgressTo(zombiesCount / playersList.length);
+      } else {
+        sound.progressTo(zombiesCount / playersList.length);
+      }
+    }
   } else {
-    sound.hitAndProgressTo(zombiesCount / playersList.length);
+    sound.progressTo(1);
   }
 }
 
