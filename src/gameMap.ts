@@ -1,5 +1,6 @@
 import {Drawable} from './drawable';
 import {Vector2} from './vector2';
+import Splash from "../assets/splashTitle.png";
 
 export class GameMap implements Drawable{
 
@@ -12,7 +13,7 @@ export class GameMap implements Drawable{
     public constructor() {
 
         this.splash = new Image();
-        this.splash.src = "assets/splashTitle.png"; // can also be a remote URL e.g. http://
+        this.splash.src = Splash; // can also be a remote URL e.g. http://
         this.splash.onload = () => {
             this.splashReady = true;
             console.log(this);
