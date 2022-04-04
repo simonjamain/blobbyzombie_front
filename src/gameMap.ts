@@ -16,7 +16,7 @@ export class GameMap implements Drawable{
         this.splash.src = Splash; // can also be a remote URL e.g. http://
         this.splash.onload = () => {
             this.splashReady = true;
-            console.log(this);
+            // console.log(this);
         };
     }
 

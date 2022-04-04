@@ -53,7 +53,7 @@ export class Sound {
     }
 
     this.currentCycle = cycle;
-    console.log(`Now playing cycle ${this.currentCycle}`);
+    // console.log(`Now playing cycle ${this.currentCycle}`);
 
     this.audio.currentTime = (this.cycleDurationInSeconds * this.currentCycle) + this.getPlayPositionInCycle();
   }
@@ -76,7 +76,7 @@ export class Sound {
   }
 
   progressTo(progressionFactor: number) {
-    console.log('progress to', progressionFactor);
+    // console.log('progress to', progressionFactor);
 
     if (progressionFactor === 1) {
       this.audio.pause();
@@ -84,7 +84,7 @@ export class Sound {
       this.menu.play();
     } else {
       if (this.audio.paused) {
-        console.log('set current time 0');
+        // console.log('set current time 0');
         this.audio.currentTime = 0;
         this.currentCycle = 0;
         this.audio.play();
@@ -120,7 +120,7 @@ export class Sound {
       if (this.currentCycle < this.numberOfCycles - 1) {
         this.currentCycle++;
 
-        console.log(`Now playing cycle ${this.currentCycle}`);
+        // console.log(`Now playing cycle ${this.currentCycle}`);
       }
     }, this.cycleDurationInSeconds * 1000);
   }

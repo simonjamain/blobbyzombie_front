@@ -29,17 +29,17 @@ url = "https://api.glop.legeay.dev";
 
 let currentPlayer: Player|null = null;
 let gameStatus: GameStatus|null = null;
-
+let isGameStopped: boolean | null = null;
+let currNumberOfPlayer: number = -1;
 let lastFrameTimestamp :number = 0;
-
 let gameObjects = new VolatileDrawableArray();
-
 let gameMap = new GameMap();
 
 let gameCanvas = document.getElementById("blobbyzombie") as HTMLCanvasElement;
 window.gameCanvas = gameCanvas;
 let gameContext = gameCanvas.getContext("2d") as CanvasRenderingContext2D;
 window.gameContext = gameContext;
+
 /**
  * Pixels per meters
  */
@@ -60,6 +60,7 @@ window.addEventListener('click', onInteraction)
 const onWhoisReceived = (player: PlayerDto) => {
   currentPlayer = Player.fromDto(player);
   currentPlayer.resetUser();
+
   window.requestAnimationFrame(update);
 }
 
@@ -67,6 +68,16 @@ const onStatusReceived = (status: StatusDto) => {
   if(currentPlayer === null) return;
 
   gameStatus = GameStatus.fromDto(status);
+
+  const nbPlayer = gameStatus.getPlayerList().length;
+  if(currNumberOfPlayer !== nbPlayer) {
+    isGameStopped = null;
+    currNumberOfPlayer = nbPlayer;
+  }
+
+  if(isGameStopped === null) {
+    isGameStopped = gameStatus.getIsGameStarted();
+  }
 
   gameStatus.getEventList().forEach(event => {
     switch(event.eventType) {
@@ -164,17 +175,21 @@ function infest(infest: InfestDto) {
   multiplayerServer.sendInfest(infest);
 }
 
-
 function update(timestamp: DOMHighResTimeStamp) {
 
   if (currentPlayer !== null && gameStatus !== null) {
     const deltaTimeSeconds = (timestamp - lastFrameTimestamp) / 1000;
 
     if(!gameStatus.getIsGameStarted()) {
+      if(!isGameStopped) {
+        isGameStopped = true;
+        activeMiddleScreenMessage("Une nouvelle partie commence bientôt !", "Scores");
+      }
       currentPlayer.resetUser();
-      activeMiddleScreenMessage("Une nouvelle partie commence bientôt !", "Scores");
-    } else {
-      disableMiddleScreenMessage();
+
+    } else if(gameStatus.getIsGameStarted()) {
+        isGameStopped = false;
+        disableMiddleScreenMessage();
 
       if (!sound.isPlaying()) {
         sound.progressTo(0);
