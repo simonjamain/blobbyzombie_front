@@ -1,4 +1,4 @@
-import { InfestDto } from './dto/infestDto';
+import {InfestDto} from './dto/infestDto';
 import {PlayerDto} from "./dto/playerDto";
 import {HitDto} from "./dto/hitDto";
 import {ShootDto} from "./dto/ShootDto";
@@ -12,7 +12,7 @@ export class MultiplayerServer {
                 private whoisCallback: (player: PlayerDto) => void,
                 private statusCallback: (status: StatusDto) => void) {
         // @ts-ignore
-        this.socket = io(serverUrl);
+        this.socket = io(serverUrl, {withCredentials: true});
         this.init();
     }
 
@@ -40,5 +40,3 @@ export class MultiplayerServer {
         this.socket.emit('playerState', playerState)
     }
 }
-
-
