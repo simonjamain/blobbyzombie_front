@@ -7,23 +7,32 @@ export class GameStatus {
 
     private isGameStarted: boolean;
     private playerList: Player[];
+    private playerDict: {string : Player};
     private eventList: any[];
 
     constructor() {
         this.isGameStarted = false;
         this.playerList = [];
         this.eventList = [];
+        this.playerDict = {} as {string : Player};
     }
 
     public static fromDto = ({isGameStarted, playerList = [], eventList}: StatusDto): GameStatus => {
         let gameStatus = new GameStatus();
+        gameStatus.playerDict = {} as {string : Player};
         gameStatus.isGameStarted = isGameStarted;
-        gameStatus.playerList = playerList.map((p: PlayerDto) => Player.fromDto(p));
+        gameStatus.playerList = playerList.map((p: PlayerDto) => {
+            const player = Player.fromDto(p);
+            // @ts-ignore
+            gameStatus.playerDict[player.getId()] = player;
+            return player;
+        });
         gameStatus.eventList = [...eventList];
         return gameStatus;
     }
 
-    public getPlayerById = (id: string): Player|undefined => this.playerList?.find(p => p.getId() === id);
+    // @ts-ignore
+    public getPlayerById = (id: string): Player|undefined => this.playerDict[id];
 
     getPlayerListExceptUs = (currentPlayerId: string) => this.playerList?.filter(p => p.getId() !== currentPlayerId);
     getTankListExceptUs = (currentPlayerId: string) => this.playerList?.filter(p => p.getId() !== currentPlayerId && !p.getIsZombie());
@@ -40,7 +49,7 @@ export class GameStatus {
         return this.playerList;
     }
 
-    getEventList(): EventDto[] {
+    public getEventList(): EventDto[] {
         return this.eventList;
     }
 
