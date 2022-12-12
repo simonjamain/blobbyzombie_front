@@ -29,7 +29,7 @@ export class Player implements Drawable {
     private position: Vector2,
     private aimingAngleRad: number,
     private color: Vector3,
-    private hullAngleRad: number,
+    private hullAngleRad: number = 0,
     private currentSpeed: number = 0
   ) {
     this.ammunitionsLeft = Player.maxAmmunitions;
@@ -48,7 +48,7 @@ export class Player implements Drawable {
     isZombie,
     aimingAngleRad,
     ammunitionsLeft,
-    hullAngleRad: bodyAngleRad,
+    hullAngleRad,
   }: PlayerDto) {
     const player = new Player(
       id,
@@ -58,7 +58,7 @@ export class Player implements Drawable {
       Vector2.fromDto(position),
       aimingAngleRad,
       Vector3.fromDto(color),
-      bodyAngleRad
+      hullAngleRad
     );
     player.setAmmunitions(ammunitionsLeft);
     return player;
@@ -78,12 +78,10 @@ export class Player implements Drawable {
   ): Shot {
     this.ammunitionsLeft--;
 
-    // console.log(this.position);
-
     return new Shot(
       this.position.add(
         Vector2.fromAngleRad(this.aimingAngleRad, Player.barrelLength)
-      ),
+      ), // shoot in front of the barrel
       this.aimingAngleRad,
       this.getColor(),
       potentialPlayerVictims,
@@ -194,9 +192,12 @@ export class Player implements Drawable {
   ) {
     this.isZombie = isZombie !== undefined ? isZombie : this.getIsZombie();
 
-    this.hullAngleRad =
-      this.hullAngleRad +
-      hullRotation * Player.hullRotationSpeed * deltaTimeSeconds;
+    const hullScaledRotation = -hullRotation * Player.hullRotationSpeed * deltaTimeSeconds;
+
+    this.hullAngleRad += hullScaledRotation;
+
+    // turn turret as well
+    this.aimingAngleRad += hullScaledRotation;
 
     const scaledMovement = Vector2.fromAngleRad(
       this.hullAngleRad,
@@ -212,11 +213,9 @@ export class Player implements Drawable {
     // console.log("aimRotation", aimRotation)
     const scaledAimRotation =
       aimRotation * deltaTimeSeconds * Player.turretRotationSpeed;
+
     this.aimingAngleRad =
       (this.aimingAngleRad + scaledAimRotation) % (Math.PI * 2);
-
-    // update hull direction
-    this.hullAngleRad = scaledMovement.getAngleRad();
   }
 
   public tryToInfestPlayers(
