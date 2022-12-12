@@ -49,4 +49,8 @@ export class Vector2 {
         const b = (this.y - vector.y)**2;
         return Math.sqrt(a + b);
     }
+
+    public getAngleRad():number {
+        return Math.atan2(this.y, this.x);
+    }
 }

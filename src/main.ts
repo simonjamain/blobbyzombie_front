@@ -24,8 +24,8 @@ const scoreList = document.getElementById('scoreList') as HTMLUListElement;
 
 
 let url: string;
-url = "https://api.glop.legeay.dev";
-// url = "http://localhost:3000";
+// url = "https://api.glop.legeay.dev";
+url = "http://localhost:3000";
 
 let currentPlayer: Player|null = null;
 let gameStatus: GameStatus|null = null;
@@ -65,6 +65,7 @@ const onWhoisReceived = (player: PlayerDto) => {
 }
 
 const onStatusReceived = (status: StatusDto) => {
+
   if(currentPlayer === null) return;
 
   gameStatus = GameStatus.fromDto(status);
