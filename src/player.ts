@@ -194,10 +194,10 @@ export class Player implements Drawable {
 
     const hullScaledRotation = -hullRotation * Player.hullRotationSpeed * deltaTimeSeconds;
 
-    this.hullAngleRad += hullScaledRotation;
+    this.hullAngleRad = (this.hullAngleRad + hullScaledRotation) % (Math.PI * 2);
 
     // turn turret as well
-    this.aimingAngleRad += hullScaledRotation;
+    this.aimingAngleRad = (this.aimingAngleRad + hullScaledRotation) % (Math.PI * 2);
 
     const scaledMovement = Vector2.fromAngleRad(
       this.hullAngleRad,
