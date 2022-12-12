@@ -1,6 +1,5 @@
-import { Vector2 } from './vector2';
+import { Vector2 } from "./vector2";
 export class GameControls {
-
   public forwardAcceleration: number;
   public reverseAcceleration: number;
   public rotateHullClockwise: number;
@@ -9,7 +8,7 @@ export class GameControls {
   public rotateTurretCounterClockwise: number;
   private shotCallBack: () => void;
 
-  constructor(shotCallBack:() => void) {
+  constructor(shotCallBack: () => void) {
     this.rotateTurretClockwise = 0;
     this.rotateTurretCounterClockwise = 0;
     this.rotateHullClockwise = 0;
@@ -21,69 +20,76 @@ export class GameControls {
     this.initListeners();
   }
 
-  public getAimRotation():number {
-    return this.rotateTurretCounterClockwise - this.rotateTurretClockwise;
-  } 
-
-  
-  public getHullRotation():number {
-    return this.rotateHullCounterClockwise - this.rotateHullClockwise;
+  public getAimRotation(): number {
+    return this.rotateTurretClockwise - this.rotateTurretCounterClockwise;
   }
 
-  public getAcceleration():number {
+  public getHullRotation(): number {
+    return this.rotateHullClockwise - this.rotateHullCounterClockwise;
+  }
+
+  public getAcceleration(): number {
     return this.forwardAcceleration - this.reverseAcceleration;
   }
 
   private initListeners(): void {
-    window.addEventListener("keydown", (e: KeyboardEvent) => {
-      switch (e.key) {
-        case "q":
-          this.rotateHullCounterClockwise = 1;
-          break;
-        case "z":
-          this.forwardAcceleration = 1;
-          break;
-        case "d":
-          this.rotateHullClockwise = 1;
-          break;
-        case "s":
-          this.reverseAcceleration = 1;
-          break;
-        case "ArrowLeft":
-          this.rotateTurretClockwise = 1;
-          break;
-        case "ArrowRight":
-          this.rotateTurretCounterClockwise = 1;
-          break;
-        case "ArrowUp":
-        case "ArrowDown":
-        case " ":
-          this.shotCallBack();
-          break;
-      }
-    }, false);
+    window.addEventListener(
+      "keydown",
+      (e: KeyboardEvent) => {
+        switch (e.key) {
+          case "q":
+            this.rotateHullCounterClockwise = 1;
+            break;
+          case "z":
+            this.forwardAcceleration = 1;
+            break;
+          case "d":
+            this.rotateHullClockwise = 1;
+            break;
+          case "s":
+            this.reverseAcceleration = 1;
+            break;
+          case "ArrowLeft":
+            this.rotateTurretCounterClockwise = 1;
+            break;
+          case "ArrowRight":
+            this.rotateTurretClockwise = 1;
+            break;
+          case "ArrowUp":
+          case "ArrowDown":
+          case " ":
+            this.shotCallBack();
+            break;
+        }
+      },
+      false
+    );
 
-    window.addEventListener("keyup", (e: KeyboardEvent) => {
-      switch (e.key) {
-        case "q":
-          this.rotateHullCounterClockwise = 0;
-          break;
-        case "z":
-          this.forwardAcceleration = 0;
-          break;
-        case "d":
-          this.rotateHullClockwise = 0;
-          break;
-        case "s":
-          this.reverseAcceleration = 0;
-          break;
-        case "ArrowLeft":
-          this.rotateTurretClockwise = 0;
-          break;
-        case "ArrowRight":
-          this.rotateTurretCounterClockwise = 0;
-          break;
-      }
-    }, false);
+    window.addEventListener(
+      "keyup",
+      (e: KeyboardEvent) => {
+        switch (e.key) {
+          case "q":
+            this.rotateHullCounterClockwise = 0;
+            break;
+          case "z":
+            this.forwardAcceleration = 0;
+            break;
+          case "d":
+            this.rotateHullClockwise = 0;
+            break;
+          case "s":
+            this.reverseAcceleration = 0;
+            break;
+          case "ArrowLeft":
+            this.rotateTurretCounterClockwise = 0;
+            break;
+          case "ArrowRight":
+            this.rotateTurretClockwise = 0;
+            break;
+        }
+      },
+      false
+    );
   }
 }

@@ -192,7 +192,7 @@ export class Player implements Drawable {
   ) {
     this.isZombie = isZombie !== undefined ? isZombie : this.getIsZombie();
 
-    const hullScaledRotation = -hullRotation * Player.hullRotationSpeed * deltaTimeSeconds;
+    const hullScaledRotation = hullRotation * Player.hullRotationSpeed * deltaTimeSeconds;
 
     this.hullAngleRad = (this.hullAngleRad + hullScaledRotation) % (Math.PI * 2);
 
