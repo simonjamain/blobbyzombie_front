@@ -1,51 +1,53 @@
 import { Vector2 } from './vector2';
 export class GameControls {
 
-  public moveLeft: number;
-  public moveRight: number;
-  public moveUp: number;
-  public moveDown: number;
+  public forwardAcceleration: number;
+  public reverseAcceleration: number;
+  public rotateHullClockwise: number;
+  public rotateHullCounterClockwise: number;
   public rotateTurretClockwise: number;
   public rotateTurretCounterClockwise: number;
   private shotCallBack: () => void;
 
   constructor(shotCallBack:() => void) {
-    this.moveLeft = 0;
-    this.moveRight = 0;
-    this.moveUp = 0;
-    this.moveDown = 0;
     this.rotateTurretClockwise = 0;
     this.rotateTurretCounterClockwise = 0;
+    this.rotateHullClockwise = 0;
+    this.rotateHullCounterClockwise = 0;
+    this.forwardAcceleration = 0;
+    this.reverseAcceleration = 0;
     this.shotCallBack = shotCallBack;
 
     this.initListeners();
-  }
-
-  public getMovementVector():Vector2 {
-    const x = this.moveRight - this.moveLeft;
-    const y = this.moveDown - this.moveUp;
-
-    return new Vector2(x, y);
   }
 
   public getAimRotation():number {
     return this.rotateTurretCounterClockwise - this.rotateTurretClockwise;
   } 
 
+  
+  public getHullRotation():number {
+    return this.rotateHullCounterClockwise - this.rotateHullClockwise;
+  }
+
+  public getAcceleration():number {
+    return this.forwardAcceleration - this.reverseAcceleration;
+  }
+
   private initListeners(): void {
     window.addEventListener("keydown", (e: KeyboardEvent) => {
       switch (e.key) {
         case "q":
-          this.moveLeft = 1;
+          this.rotateHullCounterClockwise = 1;
           break;
         case "z":
-          this.moveUp = 1;
+          this.forwardAcceleration = 1;
           break;
         case "d":
-          this.moveRight = 1;
+          this.rotateHullClockwise = 1;
           break;
         case "s":
-          this.moveDown = 1;
+          this.reverseAcceleration = 1;
           break;
         case "ArrowLeft":
           this.rotateTurretClockwise = 1;
@@ -64,21 +66,21 @@ export class GameControls {
     window.addEventListener("keyup", (e: KeyboardEvent) => {
       switch (e.key) {
         case "q":
-          this.moveLeft = 0;
+          this.rotateHullCounterClockwise = 0;
           break;
         case "z":
-          this.moveUp = 0;
+          this.forwardAcceleration = 0;
           break;
         case "d":
-          this.moveRight = 0;
+          this.rotateHullClockwise = 0;
           break;
-        case "s": // down arrow
-          this.moveDown = 0;
+        case "s":
+          this.reverseAcceleration = 0;
           break;
-        case "ArrowLeft": // right arrow
+        case "ArrowLeft":
           this.rotateTurretClockwise = 0;
           break;
-        case "ArrowRight": // down arrow
+        case "ArrowRight":
           this.rotateTurretCounterClockwise = 0;
           break;
       }

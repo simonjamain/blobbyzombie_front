@@ -18,6 +18,7 @@ export class Player implements Drawable {
   private static hullWidth: number = 2.5;
   private static hullLength: number = 4;
   private static hullDarkening: number = 0.75;
+  private static hullRotationSpeed: number = 2; // rad/seconds
   private ammunitionsLeft: number;
 
   constructor(
@@ -28,7 +29,8 @@ export class Player implements Drawable {
     private position: Vector2,
     private aimingAngleRad: number,
     private color: Vector3,
-    private hullAngleRad: number
+    private hullAngleRad: number,
+    private currentSpeed: number = 0
   ) {
     this.ammunitionsLeft = Player.maxAmmunitions;
   }
@@ -79,7 +81,9 @@ export class Player implements Drawable {
     // console.log(this.position);
 
     return new Shot(
-      this.position,
+      this.position.add(
+        Vector2.fromAngleRad(this.aimingAngleRad, Player.barrelLength)
+      ),
       this.aimingAngleRad,
       this.getColor(),
       potentialPlayerVictims,
@@ -183,13 +187,22 @@ export class Player implements Drawable {
   public update(
     gameMap: GameMap,
     deltaTimeSeconds: number,
-    movement: Vector2,
+    acceleration: number,
+    hullRotation: number,
     aimRotation: number,
     isZombie?: boolean
   ) {
     this.isZombie = isZombie !== undefined ? isZombie : this.getIsZombie();
 
-    const scaledMovement = movement.times(deltaTimeSeconds * Player.moveSpeed);
+    this.hullAngleRad =
+      this.hullAngleRad +
+      hullRotation * Player.hullRotationSpeed * deltaTimeSeconds;
+
+    const scaledMovement = Vector2.fromAngleRad(
+      this.hullAngleRad,
+      acceleration * Player.moveSpeed * deltaTimeSeconds
+    );
+
     const newPos = this.position.add(scaledMovement);
 
     if (gameMap.isPlayerInsideMap(newPos)) {
