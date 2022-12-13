@@ -32,7 +32,7 @@ export class Player implements Drawable {
     private aimingAngleRad: number,
     private color: Vector3,
     private hullAngleRad: number = 0,
-    private currentMoveSpeed: number = 0// meters/seconds
+    private currentMoveSpeed: number = 0 // meters/seconds
   ) {
     this.ammunitionsLeft = Player.maxAmmunitions;
   }
@@ -194,15 +194,23 @@ export class Player implements Drawable {
   ) {
     this.isZombie = isZombie !== undefined ? isZombie : this.getIsZombie();
 
-    const hullScaledRotation = hullRotation * Player.hullRotationSpeed * deltaTimeSeconds;
+    const hullScaledRotation =
+      hullRotation * Player.hullRotationSpeed * deltaTimeSeconds;
 
-    this.hullAngleRad = (this.hullAngleRad + hullScaledRotation) % (Math.PI * 2);
+    this.hullAngleRad =
+      (this.hullAngleRad + hullScaledRotation) % (Math.PI * 2);
 
     // turn turret as well
-    this.aimingAngleRad = (this.aimingAngleRad + hullScaledRotation) % (Math.PI * 2);
+    this.aimingAngleRad =
+      (this.aimingAngleRad + hullScaledRotation) % (Math.PI * 2);
 
-    const targetSpeed = Player.maxMoveSpeed * throttle;
-    this.currentMoveSpeed = accelerate(this.currentMoveSpeed, Math.abs(Player.acceleration), deltaTimeSeconds, targetSpeed);
+    const targetMoveSpeed = Player.maxMoveSpeed * throttle;
+    this.currentMoveSpeed = accelerate(
+      this.currentMoveSpeed,
+      Math.abs(Player.acceleration),
+      deltaTimeSeconds,
+      targetMoveSpeed
+    );
 
     const scaledMovement = Vector2.fromAngleRad(
       this.hullAngleRad,
@@ -215,12 +223,12 @@ export class Player implements Drawable {
       this.position = newPos;
     }
 
-    // console.log("aimRotation", aimRotation)
-    const scaledAimRotation =
+    // Turn the turret
+    const scaledTurretRotation =
       aimRotation * deltaTimeSeconds * Player.turretRotationSpeed;
 
     this.aimingAngleRad =
-      (this.aimingAngleRad + scaledAimRotation) % (Math.PI * 2);
+      (this.aimingAngleRad + scaledTurretRotation) % (Math.PI * 2);
   }
 
   public tryToInfestPlayers(
