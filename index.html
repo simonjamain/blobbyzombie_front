@@ -47,19 +47,12 @@
       }
     </style>
     <script
-      src="http://localhost:3000/socket.io/socket.io.js"
+      src="<%= backendUrl %>/socket.io/socket.io.js"
       onerror="
 			((e) => {
 				alert('Serveur injoignable');
 			})()"
     ></script>
-    <!-- <script
-            src="https://api.glop.legeay.dev/socket.io/socket.io.js"
-            onerror="
-			((e) => {
-				alert('Serveur injoignable');
-			})()"
-    ></script> -->
     <script type="module" src="/src/main.ts"></script>
   </head>
   <body>

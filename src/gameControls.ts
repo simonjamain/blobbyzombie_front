@@ -1,4 +1,3 @@
-import { Vector2 } from "./vector2";
 export class GameControls {
   public forwardThrottle: number;
   public reverseThrottle: number;

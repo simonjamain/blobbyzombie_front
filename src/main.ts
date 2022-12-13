@@ -24,8 +24,7 @@ const scoreList = document.getElementById('scoreList') as HTMLUListElement;
 
 
 let url: string;
-// url = "https://api.glop.legeay.dev";
-url = "http://localhost:3000";
+url = import.meta.env.VITE_BACKEND_URL;
 
 let currentPlayer: Player|null = null;
 let gameStatus: GameStatus|null = null;
