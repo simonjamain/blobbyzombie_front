@@ -1,7 +1,7 @@
 import { Vector2 } from "./vector2";
 export class GameControls {
-  public forwardAcceleration: number;
-  public reverseAcceleration: number;
+  public forwardThrottle: number;
+  public reverseThrottle: number;
   public rotateHullClockwise: number;
   public rotateHullCounterClockwise: number;
   public rotateTurretClockwise: number;
@@ -13,8 +13,8 @@ export class GameControls {
     this.rotateTurretCounterClockwise = 0;
     this.rotateHullClockwise = 0;
     this.rotateHullCounterClockwise = 0;
-    this.forwardAcceleration = 0;
-    this.reverseAcceleration = 0;
+    this.forwardThrottle = 0;
+    this.reverseThrottle = 0;
     this.shotCallBack = shotCallBack;
 
     this.initListeners();
@@ -28,8 +28,8 @@ export class GameControls {
     return this.rotateHullClockwise - this.rotateHullCounterClockwise;
   }
 
-  public getAcceleration(): number {
-    return this.forwardAcceleration - this.reverseAcceleration;
+  public getThrottle(): number {
+    return this.forwardThrottle - this.reverseThrottle;
   }
 
   private initListeners(): void {
@@ -41,13 +41,13 @@ export class GameControls {
             this.rotateHullCounterClockwise = 1;
             break;
           case "z":
-            this.forwardAcceleration = 1;
+            this.forwardThrottle = 1;
             break;
           case "d":
             this.rotateHullClockwise = 1;
             break;
           case "s":
-            this.reverseAcceleration = 1;
+            this.reverseThrottle = 1;
             break;
           case "ArrowLeft":
             this.rotateTurretCounterClockwise = 1;
@@ -73,13 +73,13 @@ export class GameControls {
             this.rotateHullCounterClockwise = 0;
             break;
           case "z":
-            this.forwardAcceleration = 0;
+            this.forwardThrottle = 0;
             break;
           case "d":
             this.rotateHullClockwise = 0;
             break;
           case "s":
-            this.reverseAcceleration = 0;
+            this.reverseThrottle = 0;
             break;
           case "ArrowLeft":
             this.rotateTurretCounterClockwise = 0;

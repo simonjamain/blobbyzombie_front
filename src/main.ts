@@ -201,7 +201,7 @@ function update(timestamp: DOMHighResTimeStamp) {
     currentPlayer.update(
       gameMap,
       deltaTimeSeconds,
-      gameControls.getAcceleration(),
+      gameControls.getThrottle(),
       gameControls.getHullRotation(),
       gameControls.getAimRotation(),
       gameStatus.getPlayerById(currentPlayer.getId())?.getIsZombie());

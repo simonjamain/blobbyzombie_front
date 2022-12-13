@@ -6,19 +6,21 @@ import { Vector2 } from "./vector2";
 import { Vector3 } from "./vector3";
 import { PlayerDto } from "./dto/playerDto";
 import { circleCircleCollide } from "./collisions";
+import { accelerate } from "./helpers/scalar";
 
 export class Player implements Drawable {
   private static turretRadius: number = 1;
   private static barrelLength: number = 2.2;
   private static barrelWidth: number = 0.2;
-  private static moveSpeed: number = 10; // meters/seconds
+  private static maxMoveSpeed: number = 10; // meters/seconds
   private static turretRotationSpeed: number = 2; // rad/seconds
   private static maxAmmunitions: number = 5;
   private static ammoWidth = 0.16;
   private static hullWidth: number = 2.5;
   private static hullLength: number = 4;
   private static hullDarkening: number = 0.75;
-  private static hullRotationSpeed: number = 2; // rad/seconds
+  private static hullRotationSpeed: number = 1; // rad/seconds
+  private static acceleration: number = 5; // meters/seconds/seconds
   private ammunitionsLeft: number;
 
   constructor(
@@ -30,7 +32,7 @@ export class Player implements Drawable {
     private aimingAngleRad: number,
     private color: Vector3,
     private hullAngleRad: number = 0,
-    private currentSpeed: number = 0
+    private currentMoveSpeed: number = 0// meters/seconds
   ) {
     this.ammunitionsLeft = Player.maxAmmunitions;
   }
@@ -185,7 +187,7 @@ export class Player implements Drawable {
   public update(
     gameMap: GameMap,
     deltaTimeSeconds: number,
-    acceleration: number,
+    throttle: number,
     hullRotation: number,
     aimRotation: number,
     isZombie?: boolean
@@ -199,9 +201,12 @@ export class Player implements Drawable {
     // turn turret as well
     this.aimingAngleRad = (this.aimingAngleRad + hullScaledRotation) % (Math.PI * 2);
 
+    const targetSpeed = Player.maxMoveSpeed * throttle;
+    this.currentMoveSpeed = accelerate(this.currentMoveSpeed, Math.abs(Player.acceleration), deltaTimeSeconds, targetSpeed);
+
     const scaledMovement = Vector2.fromAngleRad(
       this.hullAngleRad,
-      acceleration * Player.moveSpeed * deltaTimeSeconds
+      this.currentMoveSpeed * deltaTimeSeconds
     );
 
     const newPos = this.position.add(scaledMovement);
