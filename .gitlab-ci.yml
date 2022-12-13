@@ -1,0 +1,3 @@
+creation du fichier:
+    script:
+        - echo "coucou"
